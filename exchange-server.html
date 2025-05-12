@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GO6 Exchange - Launching Soon!</title>
+  <meta name="description" content="GO6 Exchange is launching soon! Get ready to exchange your currencies securely and quickly. Join our Discord for updates on supported payment methods and features.">
+  <link rel="icon" href="/media/yellowlogo.png" type="image/png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://g06.lol/exchange-server.html">
+  <meta property="og:title" content="GO6 Exchange - Launching Soon! Secure & Fast Currency Exchange">
+  <meta property="og:description" content="GO6 Exchange is gearing up for launch! Discover our planned features for secure and rapid currency exchange.">
+  <meta property="og:image" content="https://g06.lol/media/yellowlogo.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://g06.lol/exchange-server.html">
+  <meta property="twitter:title" content="GO6 Exchange Server - Launching Soon!">
+  <meta property="twitter:description" content="Get ready for GO6 Exchange! Secure and fast currency exchange, launching soon.">
+  <meta property="twitter:image" content="https://g06.lol/media/yellowlogo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html {
+      scroll-behavior: smooth; /* Fallback */
+      overflow: hidden; /* Hide native scrollbar */
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary-purple: #de5af0;
+      --light-purple: #a78bfa;
+      --discord-blue: #5865F2;
+      --dark-bg: #0a0a0a;
+      --medium-bg: #141414;
+      --card-bg: rgba(22, 22, 22, 0.85);
+      --text-primary: #fff;
+      --text-secondary: #b0b0b0;
+      --text-tertiary: #888;
+      --nav-height: 70px;
+
+      --exchange-color: #f0b90b;
+      --exchange-gradient-start: #f7d972;
+      --exchange-gradient-end: #f0b90b;
+      --exchange-accent-dark: #d8a000;
+      --exchange-text-on-accent: #1c1c1c;
+      --exchange-card-bg: rgba(30, 30, 30, 0.85);
+    }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--primary-purple); color: white;
+      padding: 8px 12px; z-index: 10001;
+      text-decoration: none;
+      transition: top 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+      border-radius: 0 0 5px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      background-color: var(--dark-bg); color: var(--text-primary);
+      min-height: 100vh; position: relative; padding-top: 0;
+      overflow: hidden; /* Hide native scrollbar */
+    }
+    body.content-visible { padding-top: var(--nav-height); }
+
+    body.exchange-server-page .skip-link {
+      background: var(--exchange-color);
+      color: var(--exchange-text-on-accent);
+    }
+
+    body.exchange-server-page .main-nav .nav-links > li > a::after {
+      background-color: var(--exchange-color);
+    }
+
+    body.exchange-server-page .main-nav .nav-links > li > a:hover,
+    body.exchange-server-page .main-nav .nav-links > li > a.active {
+      color: var(--exchange-color);
+    }
+
+    body.exchange-server-page .main-nav #nav-projects.active {
+      color: var(--exchange-color) !important;
+    }
+
+    body.exchange-server-page .main-nav #nav-projects:hover {
+      color: var(--exchange-color);
+    }
+
+    body.exchange-server-page .dropdown-menu a:hover {
+      background-color: var(--exchange-color) !important;
+      color: var(--exchange-text-on-accent) !important;
+    }
+    body.exchange-server-page .dropdown-menu a.active {
+      color: var(--exchange-color) !important;
+      background-color: rgba(240, 185, 11, 0.15) !important;
+    }
+
+    .exchange-page-blob-1, .exchange-page-blob-2 {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.20;
+      z-index: -1;
+      pointer-events: none;
+      filter: blur(140px);
+    }
+    .exchange-page-blob-1 {
+      width: 550px; height: 550px; background: var(--exchange-color);
+      top: -5%; left: -280px; animation: slowDrift1 30s infinite alternate ease-in-out;
+    }
+    .exchange-page-blob-2 {
+      width: 650px; height: 650px; background: var(--exchange-accent-dark);
+      bottom: -10%; right: -320px; animation: slowDrift2 34s infinite alternate ease-in-out;
+    }
+    @keyframes slowDrift1 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.15; }
+      50% { transform: translate(60px, -50px) scale(1.2) rotate(25deg); opacity: 0.22;}
+      100% { transform: translate(-40px, 40px) scale(0.9) rotate(-20deg); opacity: 0.15;}
+    }
+    @keyframes slowDrift2 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.18;}
+      50% { transform: translate(-55px, 45px) scale(1.15) rotate(-22deg); opacity: 0.25;}
+      100% { transform: translate(35px, -35px) scale(0.85) rotate(18deg); opacity: 0.18;}
+    }
+
+    .main-nav {
+      display: none; justify-content: space-between; align-items: center;
+      width: 100%; height: var(--nav-height); padding: 0 2rem;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background-color: rgba(10, 10, 10, 0.45);
+      backdrop-filter: blur(12px);
+      transition: background-color 0.3s ease, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
+    }
+    .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
+    .nav-logo a { display: flex; align-items: center; height: 100%; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; transition: content 0.3s ease; }
+    .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
+    .nav-links li { position: relative; margin-left: 2.5rem; display: flex; align-items: center; height: 100%; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 1rem; font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease; position: relative; padding: 0.3rem 0;
+      display: flex; align-items: center;
+    }
+    .nav-links a .fa-caret-down { margin-left: 0.4rem; transition: transform 0.3s ease; }
+    .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
+    .nav-links a::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+      transform: translateX(-50%); background-color: var(--primary-purple);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links li > a:hover { transform: translateY(-2px); }
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .dropdown-menu {
+      opacity: 0; visibility: hidden; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+      border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
+      list-style: none; box-shadow: 0 8px 25px rgba(0,0,0,0.35); margin-top: 5px;
+      transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
+    }
+    .nav-links li:hover > .dropdown-menu,
+    .nav-links li.dropdown-open > .dropdown-menu {
+      opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease-out, visibility 0s linear 0s, transform 0.25s ease-out;
+    }
+    .dropdown-menu li { margin-left: 0; width: 100%; height: auto; }
+    .dropdown-menu a {
+      display: block; padding: 0.8rem 1.5rem; color: var(--text-secondary);
+      font-size: 0.95rem; white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+    .dropdown-menu a:hover { background-color: var(--primary-purple); color: var(--text-primary); padding-left: 1.8rem; transform: translateY(0); }
+    .dropdown-menu a.active { color: var(--text-primary); background-color: rgba(222, 90, 240, 0.2);}
+    .dropdown-menu a::after { display: none; }
+    .nav-burger { display: none; cursor: pointer; flex-direction: column; justify-content: space-around; width: 25px; height: 21px; background:transparent; border:none; padding:0;}
+    .nav-burger div { width: 25px; height: 3px; background-color: var(--text-primary); transition: all 0.3s ease; border-radius: 1px; }
+
+    #main-content-wrapper {
+      min-height: calc(100vh - var(--nav-height));
+      padding: 3rem 1rem;
+      position: relative;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s;
+    }
+    #main-content-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+    .exchange-main-container { position: relative; z-index: 1; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+    .hero-section {
+      text-align: center;
+      padding: 5rem 0 4rem;
+      position: relative;
+    }
+    .hero-section .tool-name {
+      font-size: 4rem;
+      font-weight: 700; margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, var(--exchange-gradient-start), var(--exchange-gradient-end));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: -1px;
+      line-height: 1.2;
+    }
+    .hero-section .tool-name .coming-soon-badge {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--exchange-color);
+        letter-spacing: 0.5px;
+        margin-top: 0.5rem;
+        background: rgba(240, 185, 11, 0.1);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        max-width: 250px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hero-section .tool-tagline {
+      color: var(--text-secondary); font-size: 1.3rem;
+      margin-bottom: 3rem;
+      max-width: 800px; line-height: 1.7; margin-left: auto; margin-right: auto;
+    }
+    .hero-section .cta-button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.8rem;
+      background: linear-gradient(45deg, var(--exchange-gradient-start), var(--exchange-color));
+      color: var(--exchange-text-on-accent);
+      padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none;
+      font-weight: 600; font-size: 1.1rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      border: none; cursor: pointer;
+      box-shadow: 0 8px 20px rgba(240, 185, 11, 0.35);
+    }
+    .hero-section .cta-button:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(240, 185, 11, 0.45);
+    }
+    .hero-section .cta-button i { font-size: 1.3rem; margin-right: 0.2rem; }
+
+    .section-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .section-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-section { margin-bottom: 4rem; padding: 2rem 0; }
+    .content-section h2 {
+      text-align: center; font-size: 2.5rem;
+      font-weight: 600; margin-bottom: 3rem; color: var(--text-primary);
+    }
+    .content-section h2 i {
+        margin-right: 0.75rem;
+        color: var(--exchange-color);
+    }
+    .content-section .section-subtitle {
+        text-align: center;
+        font-size: 1.1rem;
+        color: var(--text-secondary);
+        margin-top: -2rem;
+        margin-bottom: 2.5rem;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .benefit-card {
+      background: var(--exchange-card-bg, var(--card-bg));
+      border-radius: 16px;
+      padding: 2.2rem;
+      border-left: 5px solid var(--exchange-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(240, 185, 11, 0.15); }
+    .benefit-card i { font-size: 2rem; color: var(--exchange-color); margin-bottom: 1rem; display: block; }
+    .benefit-card h4 { font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.7rem; }
+    .benefit-card p { font-size: 0.95rem; color: var(--text-tertiary); line-height: 1.6; }
+
+    .how-it-works-steps { list-style: none; counter-reset: step-counter; padding-left: 0; max-width: 800px; margin: 0 auto 3rem auto; }
+    .how-it-works-step {
+      background: rgba(20, 20, 20, 0.7);
+      border-radius: 12px;
+      padding: 1.8rem 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      border-left: 4px solid var(--exchange-color);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .how-it-works-step strong { display: block; color: var(--text-primary); font-size: 1.15rem; margin-bottom: 0.5rem; }
+    .how-it-works-step p { color: var(--text-secondary); line-height: 1.6; font-size: 1rem; }
+    .how-it-works-step code { background: rgba(0,0,0,0.3); padding: 0.2em 0.4em; border-radius: 4px; color: var(--light-purple); font-size: 0.9em;}
+    .how-it-works-step .note { font-size: 0.9rem; color: var(--text-tertiary); margin-top: 0.8rem; font-style: italic; }
+
+    .payment-methods-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem; justify-items: center; }
+    .payment-method-card {
+      background: var(--medium-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border: 1px solid rgba(240, 185, 11, 0.2);
+    }
+    .payment-method-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(240, 185, 11, 0.2);
+    }
+    .payment-method-card i { font-size: 2.5rem; color: var(--exchange-color); margin-bottom: 0.8rem; display: block; }
+    .payment-method-card span { font-size: 1rem; color: var(--text-primary); font-weight: 500; }
+
+    .exchange-pairs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .exchange-pair-card {
+        background: var(--exchange-card-bg, var(--card-bg));
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        border: 1px solid rgba(240, 185, 11, 0.25);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .exchange-pair-card i { font-size: 1.8rem; color: var(--exchange-color); margin-bottom: 0.75rem; }
+    .exchange-pair-card h4 { font-size: 1.1rem; color: var(--text-primary); margin-bottom: 0.5rem; }
+    .exchange-pair-card p { font-size: 0.9rem; color: var(--text-secondary); }
+
+    .security-features-list { list-style: none; padding-left: 0; max-width: 700px; margin: 0 auto; }
+    .security-feature-item {
+        background: rgba(20,20,20,0.5);
+        padding: 1.25rem 1.75rem;
+        margin-bottom: 1rem;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-left: 3px solid var(--exchange-color);
+    }
+    .security-feature-item i { color: var(--exchange-color); font-size: 1.5rem; }
+    .security-feature-item span { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
+
+    .faq-list { max-width: 800px; margin: 0 auto;}
+    .faq-item {
+        background: var(--exchange-card-bg, var(--card-bg));
+        margin-bottom: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--exchange-color);
+        padding: 1.5rem;
+    }
+    .faq-item h4 { color: var(--text-primary); margin-bottom: 0.75rem; font-size: 1.2rem; }
+    .faq-item p { color: var(--text-secondary); line-height: 1.6; font-size: 1rem; }
+
+
+    #back-to-top {
+      position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+      background: linear-gradient(45deg, var(--exchange-gradient-start), var(--exchange-color));
+      color: var(--exchange-text-on-accent); border: none; border-radius: 50%;
+      font-size: 1.5rem; display: none; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 999; box-shadow: 0 5px 15px rgba(240, 185, 11, 0.4);
+      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    }
+    #back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 20px rgba(240, 185, 11, 0.5); }
+    #back-to-top.visible { display: flex; }
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 1.5rem; }
+      .nav-burger { display: flex; }
+      .nav-links {
+        position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(10px); display: flex; flex-direction: column;
+        align-items: stretch; width: 70%; transform: translateX(100%);
+        transition: transform 0.5s ease-in-out; padding-top: 1rem; overflow-y: auto;
+      }
+      .nav-links li { opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: stretch; height: auto; }
+      .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
+      .nav-links li > a:hover { transform: none; }
+      .dropdown-menu {
+        opacity: 0; visibility: hidden; max-height: 0; overflow: hidden;
+        position: static; transform: none; width: 100%; box-shadow: none;
+        border-radius: 0; margin-top: 0; padding: 0;
+        background-color: rgba(10, 10, 10, 0.3);
+        transition: opacity 0.3s ease, max-height 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .nav-links li.dropdown-open > .dropdown-menu {
+        opacity: 1; visibility: visible; max-height: 400px; padding-left: 1.5rem;
+        transition-delay: 0s, 0s, 0s, 0s;
+      }
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+
+      .nav-active { transform: translateX(0%); }
+      @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
+      .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+      .toggle .line2 { opacity: 0; }
+      .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+      .hero-section { padding: 3rem 0 2.5rem; }
+      .hero-section .tool-name { font-size: 3rem; }
+      .hero-section .tool-name .coming-soon-badge { font-size: 1.2rem; }
+      .hero-section .tool-tagline { font-size: 1.1rem; }
+      .content-section h2 {font-size: 2rem;}
+      .payment-methods-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem;}
+      .payment-method-card i {font-size: 2rem;}
+      .payment-method-card span {font-size: 0.9rem;}
+    }
+    @media (max-width: 480px) {
+      .nav-links { width: 80%; }
+      .hero-section .tool-name {font-size: 2.5rem;}
+      .hero-section .tool-name .coming-soon-badge { font-size: 1rem; max-width: 200px;}
+      .hero-section .tool-tagline {font-size: 1rem;}
+      .payment-methods-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+      .payment-method-card { padding: 1rem;}
+      .payment-method-card i { font-size: 1.8rem; }
+      #back-to-top { width: 45px; height: 45px; font-size: 1.3rem; bottom: 25px; right: 25px;}
+    }
+
+  </style>
+</head>
+<body class="exchange-server-page">
+  <a href="#exchange-main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <a href="/index.html"><img src="/media/logo.png" alt="Go6 Logo" id="navbar-logo"></a>
+    </div>
+    <ul class="nav-links" id="nav-links-main">
+      <li><a href="/index.html" id="nav-home">Home</a></li>
+      <li><a href="/about.html" id="nav-about">About Us</a></li>
+      <li class="nav-item-dropdown">
+        <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
+          Projects <i class="fas fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav-projects">
+          <li><a href="/g06.html">G06 Raider</a></li>
+          <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
+          <li><a href="/exchange-server.html">Go6 Exchange Server</a></li>
+        </ul>
+      </li>
+      <li><a href="/store.html" id="nav-store">Store</a></li>
+      <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
+    </ul>
+    <button class="nav-burger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-main">
+        <div class="line1"></div> <div class="line2"></div> <div class="line3"></div>
+    </button>
+  </nav>
+
+  <div id="main-content-wrapper">
+    <div class="exchange-page-blob-1"></div>
+    <div class="exchange-page-blob-2"></div>
+
+    <main class="exchange-main-container" id="exchange-main-content">
+      <section class="hero-section">
+        <h1 class="tool-name">GO6 Exchange Server <span class="coming-soon-badge">Launching Soon!</span></h1>
+        <p class="tool-tagline">Get Ready for GO6 Exchange! Our secure and lightning-fast currency exchange server is preparing for launch. We're building a seamless experience for all your digital asset conversions, initially through our efficient Discord bot service.</p>
+        <a href="https://discord.gg/g06" class="cta-button" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-discord"></i> Join Discord for Launch Updates
+        </a>
+      </section>
+
+      <section class="content-section benefits-section">
+        <h2><i class="fas fa-gem"></i> What to Expect from GO6 Exchange</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fas fa-bolt"></i>
+                <h4>Lightning Fast Transactions</h4>
+                <p>You will experience swift transaction processing, getting your exchanged funds without unnecessary delays.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-shield-halved"></i>
+                <h4>Secure Platform</h4>
+                <p>Your security will be our top priority. We are implementing robust measures to ensure safe exchanges every time.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-credit-card"></i>
+                <h4>Versatile Payments</h4>
+                <p>We plan to support a wide array of popular payment methods for your convenience.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-headset"></i>
+                <h4>Dedicated Support</h4>
+                <p>Our team will be available on Discord to assist you with any queries or issues once we launch.</p>
+            </div>
+        </div>
+      </section>
+
+      <section class="content-section what-we-exchange-section">
+        <h2><i class="fas fa-exchange-alt"></i> What We're Building</h2>
+        <p class="section-subtitle">We are designing GO6 Exchange to cater to a diverse range of exchange needs. Here's a glimpse of what we plan to offer:</p>
+        <div class="exchange-pairs-grid">
+            <div class="exchange-pair-card">
+                <i class="fab fa-bitcoin"></i>
+                <h4>Crypto to Crypto Swaps</h4>
+                <p>Seamlessly swap between various cryptocurrencies like BTC, ETH, LTC, and other popular altcoins.</p>
+            </div>
+            <div class="exchange-pair-card">
+                <i class="fab fa-paypal"></i>
+                <h4>Fiat to Crypto Conversion</h4>
+                <p>We aim to allow conversion from PayPal, Bank Transfers, and other fiat payments into your desired crypto.</p>
+            </div>
+            <div class="exchange-pair-card">
+                <i class="fas fa-wallet"></i>
+                <h4>Crypto to Fiat Payouts</h4>
+                <p>Our goal is to enable you to cash out your cryptocurrencies to PayPal or other supported fiat methods.</p>
+            </div>
+            <div class="exchange-pair-card">
+                <i class="fas fa-random"></i>
+                <h4>And Other Digital Assets</h4>
+                <p>We are exploring options for other digital asset exchanges. Stay tuned for more details!</p>
+            </div>
+        </div>
+        <p style="text-align: center; color: var(--text-secondary);">The full list of supported pairs and precise rates will be available upon launch via our Discord bot.</p>
+      </section>
+
+
+      <section class="content-section how-it-works-section">
+        <h2><i class="fas fa-tasks"></i> How It Will Work (Post-Launch)</h2>
+        <p class="section-subtitle">We're designing a straightforward process for when GO6 Exchange goes live:</p>
+        <ol class="how-it-works-steps">
+            <li class="how-it-works-step">
+                <strong>1. Join Our Community & Get Ready</strong>
+                <p>Click any "Discord" button on our site to join the official GO6 server for launch announcements and early access information.</p>
+            </li>
+            <li class="how-it-works-step">
+                <strong>2. Access the Exchange Bot (Once Live)</strong>
+                <p>After launch, you'll navigate to our exchange channel and interact with the GO6 Exchange Bot using simple commands (e.g., <code>/exchange</code>).</p>
+            </li>
+            <li class="how-it-works-step">
+                <strong>3. Specify Your Desired Exchange</strong>
+                <p>You'll let the bot know what you want to exchange (e.g., PayPal to Bitcoin) and the amounts involved.</p>
+            </li>
+            <li class="how-it-works-step">
+                <strong>4. Complete Your Transaction Securely</strong>
+                <p>Follow the bot's clear instructions to complete your payment. Your exchanged currency will then be delivered promptly.</p>
+            </li>
+            <li class="how-it-works-step">
+                <strong>5. Telegram Bot Integration (Future Plans)</strong>
+                <p>We are also planning a Telegram bot for even more convenience down the line.</p>
+                <p class="note">All features and processes are subject to finalization upon launch. Stay tuned for updates in our Discord announcements.</p>
+            </li>
+        </ol>
+      </section>
+
+      <section class="content-section payment-methods-section">
+        <h2><i class="fas fa-money-check-alt"></i> Planned Payment Methods</h2>
+        <p class="section-subtitle">We are working to integrate a variety of secure and popular payment options:</p>
+        <div class="payment-methods-grid">
+            <div class="payment-method-card"> <i class="fab fa-paypal"></i> <span>PayPal</span> </div>
+            <div class="payment-method-card"> <i class="fab fa-bitcoin"></i> <span>Bitcoin</span> </div>
+            <div class="payment-method-card"> <i class="fab fa-ethereum"></i> <span>Ethereum</span> </div>
+            <div class="payment-method-card"> <i class="fas fa-coins"></i> <span>Litecoin</span> </div>
+            <div class="payment-method-card"> <i class="fas fa-landmark"></i> <span>Bank Transfer</span> </div>
+            <div class="payment-method-card"> <i class="fas fa-credit-card"></i> <span>Credit/Debit Cards</span> </div>
+            <div class="payment-method-card"> <i class="fas fa-plus-circle"></i> <span>Exploring More!</span> </div>
+        </div>
+        <p style="text-align: center; margin-top: 1.5rem; color: var(--text-secondary);">The final list of accepted methods will be confirmed at launch. Join our Discord for the latest news!</p>
+      </section>
+
+      <section class="content-section security-section">
+        <h2><i class="fas fa-user-shield"></i> Our Commitment to Security</h2>
+        <p class="section-subtitle">Even before launch, security is at the forefront of our development for GO6 Exchange.</p>
+        <ul class="security-features-list">
+            <li class="security-feature-item">
+                <i class="fas fa-lock"></i>
+                <span>We are building with secure transaction protocols and plan for encrypted communication channels.</span>
+            </li>
+            <li class="security-feature-item">
+                <i class="fas fa-shield-virus"></i>
+                <span>Our development includes considerations for regular security audits and updates to our exchange bot and systems.</span>
+            </li>
+            <li class="security-feature-item">
+                <i class="fas fa-user-secret"></i>
+                <span>A strict privacy policy will be in place to protect your personal and transactional data.</span>
+            </li>
+             <li class="security-feature-item">
+                <i class="fas fa-history"></i>
+                <span>We aim for transparent processes and will have support available for any security concerns post-launch.</span>
+            </li>
+        </ul>
+      </section>
+
+      <section class="content-section faq-section">
+        <h2><i class="fas fa-question-circle"></i> Your Questions Answered (Pre-Launch)</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <h4>When is GO6 Exchange launching?</h4>
+                <p>We are working diligently to bring GO6 Exchange to you as soon as possible! The best way to get the exact launch date is to join our Discord server for official announcements.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What will the fees be for using GO6 Exchange?</h4>
+                <p>We plan for our fees to be competitive and transparent. Detailed fee structures will be announced closer to launch and will be easily accessible via our Discord bot.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How will my information be kept secure?</h4>
+                <p>Security is a core component of our development. We are designing the system with multiple security layers and will adhere to strict data privacy practices. More details will be shared upon launch.</p>
+            </div>
+            <div class="faq-item">
+                <h4>How can I stay updated on the launch?</h4>
+                <p>Join our Discord server! We'll post all major announcements, sneak peeks, and launch details there. You can find the link on this page.</p>
+            </div>
+        </div>
+      </section>
+
+      <section class="content-section stay-updated-section">
+        <h2><i class="fas fa-bullhorn"></i> Be the First to Know!</h2>
+        <p class="section-subtitle">GO6 Exchange is on its way to becoming your go-to platform for fast and secure digital asset exchanges. We're putting the finishing touches on a service designed with you in mind.</p>
+        <p style="text-align: center; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 2rem;">Don't miss out on launch announcements, exclusive early information, and community discussions!</p>
+        <div style="text-align: center;">
+            <a href="https://discord.gg/go6" class="cta-button" target="_blank" rel="noopener noreferrer" style="background: var(--exchange-color); color: var(--exchange-text-on-accent);">
+            </a>
+        </div>
+      </section>
+
+
+      <section class="hero-section" style="padding-top: 2rem; padding-bottom: 5rem;">
+        <h2 style="font-size: 2.2rem; margin-bottom:1.5rem; color: var(--text-primary);">The Future of Exchange is Coming.</h2>
+        <p class="tool-tagline" style="font-size: 1.1rem; margin-bottom: 2rem;">Get ready for a new standard in digital asset conversion with GO6 Exchange. We can't wait to share it with you!</p>
+        <a href="https://discord.gg/g06" class="cta-button" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-hourglass-start"></i> Stay Tuned on Discord
+        </a>
+      </section>
+    </main>
+  </div>
+  <button id="back-to-top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let lenis; // Declare lenis in a scope accessible by all functions that need it
+
+    // Initialize Lenis
+    if (window.Lenis) {
+        lenis = new Lenis({
+            duration: 1.3,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            // Add other Lenis options here if you used them on your home page
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+    const mainNav = document.querySelector('.main-nav');
+    const body = document.body;
+
+    // Make content visible (ensure this happens after Lenis might have initialized)
+    if(mainNav) mainNav.classList.add('visible');
+    if(mainContentWrapper) mainContentWrapper.classList.add('visible');
+    body.classList.add('content-visible');
+
+
+    function getMediaPath(fileName) { return '/media/' + fileName; }
+
+    const navLogoImg = document.getElementById('navbar-logo');
+    if (navLogoImg) {
+        if (body.classList.contains('exchange-server-page')) {
+            navLogoImg.src = getMediaPath('yellowlogo.png');
+        } else if (body.classList.contains('api-wrapper-page')) {
+            navLogoImg.src = getMediaPath('greengo6.png');
+        } else {
+            navLogoImg.src = getMediaPath('logo.png');
+        }
+    }
+
+    initializePageScripts();
+    initScrollReveal();
+
+    function initializePageScripts() {
+      const burger = document.querySelector('.nav-burger');
+      const navMenu = document.querySelector('.nav-links');
+      const navMenuId = navMenu ? (navMenu.id || 'nav-links-main') : 'nav-links-main';
+      if (navMenu && !navMenu.id) navMenu.id = navMenuId;
+      if(burger && navMenu) burger.setAttribute('aria-controls', navMenuId);
+
+
+      const navLinkItems = document.querySelectorAll('.nav-links > li');
+
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          const isExpanded = navMenu.classList.toggle('nav-active');
+          burger.setAttribute('aria-expanded', isExpanded.toString());
+          burger.classList.toggle('toggle');
+          if (navMenu.classList.contains('nav-active')) {
+            navMenu.style.overflowY = 'auto';
+          } else {
+            navMenu.style.overflowY = 'hidden';
+          }
+
+          navLinkItems.forEach((item, index) => {
+            if (item.style.animation) { item.style.animation = ''; }
+            else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
+          });
+        });
+      }
+
+      if (navMenu) {
+        navMenu.querySelectorAll('a').forEach(link => {
+          if (!link.classList.contains('nav-projects-link')) {
+            link.addEventListener('click', (e) => {
+              const href = link.getAttribute('href');
+              if (href && href.startsWith('#') && lenis) {
+                e.preventDefault();
+                const navElement = document.querySelector('.main-nav');
+                const navHeight = navElement ? navElement.offsetHeight : 70;
+                lenis.scrollTo(href, {offset: -navHeight});
+              }
+              if (navMenu.classList.contains('nav-active') && !link.closest('.dropdown-menu')) {
+                navMenu.classList.remove('nav-active');
+                navMenu.style.overflowY = 'hidden';
+                if (burger) {
+                    burger.classList.remove('toggle');
+                    burger.setAttribute('aria-expanded', 'false');
+                }
+                navLinkItems.forEach(item => item.style.animation = '');
+              }
+            });
+          }
+        });
+      }
+
+      const projectsLink = document.querySelector('.nav-projects-link');
+      if (projectsLink) {
+        projectsLink.addEventListener('click', function(e) {
+          if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
+            e.preventDefault();
+            const parentLi = this.parentElement;
+            const isDropdownOpen = parentLi.classList.toggle('dropdown-open');
+            this.setAttribute('aria-expanded', isDropdownOpen.toString());
+             const dropdownMenu = parentLi.querySelector('.dropdown-menu');
+            if (dropdownMenu) {
+                if (parentLi.classList.contains('dropdown-open')) {
+                    dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + "px";
+                } else {
+                    dropdownMenu.style.maxHeight = '0';
+                }
+            }
+          }
+        });
+      }
+
+      const currentPagePath = window.location.pathname;
+      const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
+      const normalizePath = (path) => {
+        if (!path) return '';
+        if (!path.startsWith('/')) path = '/' + path;
+        if (path === '/' || path === '/index' || path.endsWith('/index.html')) return '/index.html';
+        if (!path.endsWith('/') && !path.includes('.')) path += '.html';
+        return path;
+      };
+
+      let normalizedCurrentPagePath = normalizePath(currentPagePath);
+
+      if (currentPagePath.includes('exchange-server')) {
+        normalizedCurrentPagePath = '/exchange-server.html';
+      } else if (currentPagePath.includes('api-wrapper')) {
+        normalizedCurrentPagePath = '/api-wrapper.html';
+      } else if (currentPagePath.includes('g06.html') || currentPagePath.endsWith('/g06')) {
+          normalizedCurrentPagePath = '/g06.html';
+      } else if (currentPagePath.includes('app-raider')) {
+          normalizedCurrentPagePath = '/app-raider.html';
+      }
+
+
+      allNavAnchors.forEach(anchor => {
+        let linkHref = anchor.getAttribute('href');
+        if (!linkHref || linkHref === '#') return;
+        let normalizedLinkHref = normalizePath(linkHref);
+
+        if (normalizedLinkHref === normalizedCurrentPagePath) {
+          anchor.classList.add('active');
+          const dropdownParent = anchor.closest('.nav-item-dropdown');
+          if (dropdownParent) {
+            const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
+            if (projectsMainLink) projectsMainLink.classList.add('active');
+          }
+        } else {
+          if (!(anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active'))) {
+            anchor.classList.remove('active');
+          }
+        }
+      });
+      if (document.querySelector('.dropdown-menu a.active')) {
+        const projectsMainLink = document.getElementById('nav-projects');
+        if (projectsMainLink && !projectsMainLink.classList.contains('active')) {
+             projectsMainLink.classList.add('active');
+        }
+      }
+
+      const backToTopButton = document.getElementById('back-to-top');
+      if (backToTopButton) {
+        if (lenis) {
+            lenis.on('scroll', (e) => {
+                if (e.scroll > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+        } else {
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+        }
+
+        backToTopButton.addEventListener('click', () => {
+          if (lenis) {
+            lenis.scrollTo(0, { duration: 1.5 });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+    }
+
+    function initScrollReveal() {
+      const sectionsToReveal = document.querySelectorAll(
+          '.benefits-section, .how-it-works-section, .payment-methods-section, .what-we-exchange-section, .security-section, .faq-section, .stay-updated-section, .hero-section:not(:first-of-type)'
+      );
+      if (!sectionsToReveal.length) return;
+
+      sectionsToReveal.forEach(section => {
+        section.classList.add('section-hidden');
+      });
+
+      const observer = new IntersectionObserver((entries, observerInstance) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('section-hidden');
+            entry.target.classList.add('section-visible');
+            observerInstance.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05 });
+
+      sectionsToReveal.forEach(section => {
+        observer.observe(section);
+      });
+    }
+
+    // Skip Link with Lenis
+    const skipLink = document.querySelector('a.skip-link');
+    if (skipLink) {
+        skipLink.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId.startsWith('#')) {
+                e.preventDefault();
+                if (lenis) {
+                    const navElement = document.querySelector('.main-nav');
+                    const navHeight = navElement ? navElement.offsetHeight : 70; // Default or calculated
+                    lenis.scrollTo(targetId, { offset: -navHeight });
+                } else {
+                    // Fallback if Lenis is not available
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                         const navElement = document.querySelector('.main-nav');
+                         const navHeight = navElement ? navElement.offsetHeight : 70;
+                        window.scrollTo({
+                            top: targetElement.offsetTop - navHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+        });
+    }
+  });
+  </script>
+</body>
+</html>

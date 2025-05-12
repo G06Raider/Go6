@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GO6 - Official Store</title>
+  <meta name="description" content="Purchase or download GO6 Raider and related GO6 Projects tools directly from the official source.">
+  <link rel="icon" href="/media/loading.gif" type="image/gif"> <meta property="og:type" content="website">
+  <meta property="og:url" content="https://g06.lol/store.html">
+  <meta property="og:title" content="GO6 - Official Store">
+  <meta property="og:description" content="Get your official GO6 tools, including GO6 Raider Console and GUI versions.">
+  <meta property="og:image" content="https://g06.lol/media/logo.png">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://g06.lol/store.html">
+  <meta property="twitter:title" content="GO6 - Official Store">
+  <meta property="twitter:description" content="Get your GO6 tools here.">
+  <meta property="twitter:image" content="https://g06.lol/media/logo.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html {
+        scroll-behavior: smooth;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary-purple: #de5af0;
+      --light-purple: #a78bfa;
+      --discord-blue: #5865F2;
+      --dark-bg: #0a0a0a;
+      --medium-bg: #141414;
+      --card-bg: rgba(22, 22, 22, 0.85); /* Card background */
+      --text-primary: #fff;
+      --text-secondary: #aaa;
+      --text-tertiary: #999;
+      --nav-height: 70px;
+      --stripe-blue: #635bff;
+      --paypal-blue: #0070ba;
+      --download-green: #28a745;
+
+      --blob1-mouse-x: 0px; --blob1-mouse-y: 0px; --blob1-scroll-y: 0px;
+      --blob2-mouse-x: 0px; --blob2-mouse-y: 0px; --blob2-scroll-y: 0px;
+    }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--primary-purple); color: white;
+      padding: 8px 12px; z-index: 10001;
+      text-decoration: none;
+      transition: top 0.3s ease-in-out; border-radius: 0 0 5px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    #pre-entry-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: var(--dark-bg); display: flex; align-items: center;
+      justify-content: center; z-index: 20000; /* Ensure it's on top */
+      cursor: pointer;
+      transition: opacity 0.5s ease-out, visibility 0s linear 0.5s; /* Visibility transition fix */
+    }
+    #pre-entry-screen img {
+        max-width: 80%; max-height: 80%; object-fit: contain; border-radius: 10px;
+        animation: pulse-pre-entry 2s infinite ease-in-out;
+    }
+    #pre-entry-screen.hidden { opacity: 0; visibility: hidden; }
+
+    @keyframes pulse-pre-entry {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    body {
+      background-color: var(--dark-bg); color: var(--text-primary);
+      min-height: 100vh; position: relative; padding-top: 0;
+      overflow-x: hidden; overflow-y: auto;
+    }
+    body.content-visible { padding-top: var(--nav-height); }
+
+    #main-content-wrapper {
+      min-height: calc(100vh - var(--nav-height));
+      display: flex;
+      flex-direction: column; align-items: center; justify-content: flex-start;
+      padding: 2rem 1rem; position: relative;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+    }
+    #main-content-wrapper.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .purple-blob {
+      position: fixed; /* Changed to fixed for consistent viewport relation */
+      border-radius: 50%; filter: blur(80px);
+      opacity: 0.4; /* Slightly reduced opacity */
+      z-index: 0;
+      pointer-events: none; /* Ensure blobs don't interfere with clicks */
+      transition: transform 0.1s linear; /* Smoother, faster follow */
+    }
+    .blob-1 {
+        width: 400px; height: 400px; background: var(--primary-purple); top: -150px; left: -150px;
+        transform: translate(var(--blob1-mouse-x), var(--blob1-mouse-y)) translateY(var(--blob1-scroll-y));
+    }
+    .blob-2 {
+        width: 500px; height: 500px; background: var(--light-purple); bottom: -200px; right: -200px;
+        transform: translate(var(--blob2-mouse-x), var(--blob2-mouse-y)) translateY(var(--blob2-scroll-y));
+    }
+
+    .main-nav {
+      display: none; justify-content: space-between; align-items: center;
+      width: 100%; height: var(--nav-height); padding: 0 2rem;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background-color: rgba(10, 10, 10, 0.3); backdrop-filter: blur(8px);
+      transition: background-color 0.3s ease, opacity 0.5s ease-in-out 0.1s, visibility 0.5s ease-in-out 0.1s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1); opacity: 0; visibility: hidden;
+    }
+    .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
+    .nav-logo a { display: flex; align-items: center; height: 100%; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; }
+
+    .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
+    .nav-links li {
+      position: relative;
+      margin-left: 2.5rem; display: flex; align-items: center; height: 100%;
+    }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 1rem; font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease; position: relative; padding: 0.3rem 0;
+      display: flex; align-items: center;
+    }
+    .nav-links a .fa-caret-down { margin-left: 0.4rem; transition: transform 0.3s ease; }
+    .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
+
+    .nav-links a::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+      transform: translateX(-50%); background-color: var(--primary-purple); transition: width 0.3s ease;
+    }
+    .nav-links li > a:hover { color: var(--text-primary); transform: translateY(-2px); }
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .dropdown-menu {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(20, 20, 20, 0.85); backdrop-filter: blur(5px);
+      border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
+      list-style: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-top: 5px;
+      transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
+    }
+    .nav-links li:hover > .dropdown-menu,
+    .nav-links li.dropdown-open > .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease-out, visibility 0s linear 0s, transform 0.25s ease-out;
+    }
+    .dropdown-menu li { margin-left: 0; width: 100%; height: auto; }
+    .dropdown-menu a {
+      display: block; padding: 0.75rem 1.5rem; color: var(--text-secondary);
+      font-size: 0.95rem; white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--primary-purple); color: var(--text-primary);
+      padding-left: 1.8rem; transform: translateY(0);
+    }
+    .dropdown-menu a::after { display: none; }
+
+    .nav-burger { display: none; cursor: pointer; flex-direction: column; justify-content: space-around; width: 25px; height: 21px; background: transparent; border: none; padding:0;}
+    .nav-burger div { width: 25px; height: 3px; background-color: var(--text-primary); transition: all 0.3s ease; border-radius: 1px; }
+
+
+    .store-container {
+      position: relative; z-index: 1; max-width: 1200px;
+      width: 100%; padding: 2rem 1rem;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .store-header { text-align: center; margin-bottom: 3rem; padding-top: 1rem; }
+    .store-title {
+      font-size: 3rem; /* Increased size */
+      font-weight: 700; /* Boldened */
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-purple), var(--light-purple));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    }
+    .store-title .fa-store {
+        font-size: 2.8rem; /* Icon size relative to title */
+        background: linear-gradient(90deg, var(--primary-purple), var(--light-purple));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .store-subtitle { color: var(--text-secondary); font-size: 1.2rem; max-width: 750px; line-height: 1.7; margin: 0 auto; }
+
+    /* New Section: Why Shop With Us */
+    .why-shop-section {
+        background: rgba(20,20,20,0.3);
+        border-radius: 16px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 3rem;
+        width: 100%;
+        max-width: 1000px; /* Limit width */
+        border: 1px solid rgba(255,255,255,0.05);
+    }
+    .why-shop-section h2 {
+        text-align: center;
+        font-size: 1.8rem;
+        color: var(--text-primary);
+        margin-bottom: 2rem;
+    }
+    .why-shop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    .why-shop-item {
+        text-align: center;
+        padding: 1rem;
+    }
+    .why-shop-item i {
+        font-size: 2.2rem;
+        color: var(--light-purple);
+        margin-bottom: 0.75rem;
+    }
+    .why-shop-item h4 {
+        font-size: 1.1rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+    }
+    .why-shop-item p {
+        font-size: 0.9rem;
+        color: var(--text-tertiary);
+        line-height: 1.5;
+    }
+
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); /* Slightly wider minmax */
+      gap: 2.5rem;
+      width: 100%;
+    }
+
+    .product-card {
+      background: var(--card-bg); /* Using consistent card background */
+      border-radius: 18px; padding: 2rem;
+      backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; flex-direction: column; text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Softer initial shadow */
+    }
+    .product-card:hover {
+        transform: translateY(-8px) scale(1.02); /* Enhanced hover */
+        box-shadow: 0 12px 25px rgba(var(--primary-purple-rgb, 222, 90, 240), 0.2); /* Themed shadow */
+    }
+
+    .product-image-placeholder {
+      width: 100%; height: 200px; /* Increased height */
+      background-color: rgba(255,255,255,0.03); /* Darker placeholder */
+      border-radius: 12px; /* Softer radius */
+      margin-bottom: 1.5rem; display: flex;
+      align-items: center; justify-content: center; overflow: hidden;
+      border: 1px dashed rgba(255,255,255,0.1); /* Subtle dashed border */
+    }
+    .product-image-placeholder img { max-width: 100%; max-height: 100%; object-fit: contain;}
+    .product-image-placeholder .fa-terminal { font-size: 5.5rem; color: var(--light-purple); opacity: 0.7; }
+
+
+    .product-card h2 { font-size: 1.9rem; margin-bottom: 0.75rem; color: var(--text-primary); }
+    .product-card .price {
+      font-size: 1.6rem; font-weight: 700; /* Bolder price */
+      margin-bottom: 1rem;
+      color: var(--primary-purple);
+    }
+    .product-card .price.free { color: var(--download-green); }
+    .product-card .price .lifetime-badge {
+        font-size: 0.7em;
+        font-weight: 500;
+        color: var(--text-secondary);
+        background-color: rgba(255,255,255,0.05);
+        padding: 0.2em 0.5em;
+        border-radius: 4px;
+        margin-left: 0.5em;
+        vertical-align: middle;
+    }
+
+    .product-card .description { color: var(--text-tertiary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem; min-height: 80px; }
+
+    .product-features-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-top: 1rem; /* Added margin top */
+        margin-bottom: 0.85rem;
+        text-align: left;
+        font-size: 1.05rem; /* Slightly larger */
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.5rem;
+    }
+    .product-card ul { list-style: none; padding-left: 0; text-align: left; margin-bottom: 2rem; } /* Increased bottom margin */
+    .product-card li { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.6rem; display: flex; align-items: center; }
+    .product-card li i { color: var(--light-purple); margin-right: 0.85rem; font-size: 0.9rem; width: 18px; text-align: center; } /* Increased icon size */
+
+    .product-buttons { margin-top: auto; display: flex; flex-direction: column; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.07); }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.9rem 1.5rem; /* Slightly larger padding */
+      border-radius: 8px; /* Consistent rounded corners */
+      text-decoration: none;
+      font-weight: 600; font-size: 1rem; transition: all 0.3s; border: none; cursor: pointer;
+    }
+    .btn i { margin-right: 0.75rem; font-size: 1.2rem; }
+
+    .btn-download { background-color: var(--download-green); color: white; }
+    .btn-download:hover { background-color: #218838; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(40, 167, 69, 0.3); }
+
+    .btn-stripe { background-color: var(--stripe-blue); color: white; }
+    .btn-stripe:hover { background-color: #5243f5; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(99, 91, 255, 0.3); }
+
+    .btn-paypal { background-color: var(--paypal-blue); color: white; }
+    .btn-paypal:hover { background-color: #005ea6; transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0, 112, 186, 0.3); }
+
+    /* New Section: Payment & Delivery */
+    .payment-info-section {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        background: rgba(20,20,20,0.2);
+        border-radius: 12px;
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+        width: 100%;
+        max-width: 800px;
+         border: 1px solid rgba(255,255,255,0.05);
+    }
+    .payment-info-section h3 {
+        font-size: 1.5rem;
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+    .payment-info-section p {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+    }
+    .payment-info-section .payment-icons i {
+        font-size: 2rem;
+        margin: 0 0.5rem;
+        color: var(--text-tertiary);
+    }
+
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 1.5rem; }
+      .nav-burger { display: flex; }
+      .nav-links {
+        position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px); display: flex; flex-direction: column;
+        align-items: stretch; width: 60%; transform: translateX(100%);
+        transition: transform 0.5s ease-in-out; padding-top: 1rem;
+        overflow-y: auto;
+      }
+      .nav-links li {
+        opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%;
+        display: flex; flex-direction: column; align-items: stretch; height: auto;
+      }
+      .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
+      .nav-links li > a:hover { transform: none; }
+
+      .dropdown-menu {
+        opacity: 0;
+        visibility: hidden;
+        max-height: 0;
+        overflow: hidden;
+        position: static; transform: none; width: 100%;
+        box-shadow: none; border-radius: 0; margin-top: 0; padding-left: 1.5rem;
+        background-color: rgba(15, 15, 15, 0.7);
+        /* transform: translateY(-10px); removed as it can conflict with max-height */
+        transition: opacity 0.3s ease, visibility 0s linear 0.3s, max-height 0.3s ease;
+      }
+      .nav-links li.dropdown-open > .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        max-height: 400px;
+        /* transform: translateY(0); */
+        transition-delay: 0s, 0s, 0s, 0s;
+      }
+
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+      .dropdown-menu a:hover { background-color: var(--primary-purple); padding-left: 1.8rem; }
+      .nav-active { transform: translateX(0%); }
+      @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
+      .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+      .toggle .line2 { opacity: 0; }
+      .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+      .store-title { font-size: 2.5rem; }
+      .store-title .fa-store { font-size: 2.3rem; }
+      .store-subtitle { font-size: 1.1rem; }
+      .products-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .product-card { padding: 1.5rem; }
+      .why-shop-section { padding: 2rem 1.5rem; }
+      .why-shop-section h2 { font-size: 1.6rem; }
+    }
+    @media (max-width: 480px) {
+      .nav-links { width: 75%; }
+      .store-title { font-size: 2rem; }
+      .store-title .fa-store { font-size: 1.8rem; }
+      .store-subtitle { font-size: 0.95rem; }
+      .btn { font-size: 0.9rem; padding: 0.7rem 1.2rem;}
+      .product-card h2 { font-size: 1.6rem; }
+      .product-card .price { font-size: 1.4rem; }
+      .product-image-placeholder { height: 160px; }
+      .product-image-placeholder .fa-terminal { font-size: 4.5rem;}
+      .why-shop-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <div id="pre-entry-screen">
+    <img src="/media/loading.gif" alt="Loading GO6 Store..." />
+  </div>
+
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <a href="/index.html"><img src="/media/logo.png" alt="GO6 Logo"></a>
+    </div>
+    <ul class="nav-links" id="nav-links-main">
+      <li><a href="/index.html" id="nav-home">Home</a></li>
+      <li><a href="/about.html" id="nav-about">About Us</a></li>
+      <li class="nav-item-dropdown">
+        <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
+          Projects <i class="fas fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav-projects">
+          <li><a href="/g06.html">G06 Raider</a></li>
+          <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
+          <li><a href="/exchange-server.html">GO6 Exchange Server</a></li>
+           <li><a href="">COMING SOON!</a></li> </ul>
+      </li>
+      <li><a href="/store.html" id="nav-store">Store</a></li>
+      <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
+    </ul>
+    <button class="nav-burger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-main">
+        <div class="line1"></div><div class="line2"></div><div class="line3"></div>
+    </button>
+  </nav>
+
+  <div id="main-content-wrapper">
+    <div class="purple-blob blob-1"></div>
+    <div class="purple-blob blob-2"></div>
+
+    <main class="store-container" id="main-content">
+      <div class="store-header">
+        <h1 class="store-title"><i class="fas fa-store"></i> GO6 Official Store</h1>
+        <p class="store-subtitle">Your one-stop destination for all official GO6 tools and utilities. Get the powerful GO6 Raider and enhance your experience.</p>
+      </div>
+
+      <section class="why-shop-section">
+        <h2>Why Shop With GO6?</h2>
+        <div class="why-shop-grid">
+            <div class="why-shop-item">
+                <i class="fas fa-check-circle"></i>
+                <h4>Official & Secure</h4>
+                <p>Get genuine software directly from the source. All payments are processed securely.</p>
+            </div>
+            <div class="why-shop-item">
+                <i class="fas fa-bolt"></i>
+                <h4>Instant Access</h4>
+                <p>Receive your digital purchases immediately after payment confirmation.</p>
+            </div>
+            <div class="why-shop-item">
+                <i class="fas fa-headset"></i>
+                <h4>Dedicated Support</h4>
+                <p>Access to our support channels on Discord for any assistance you may need.</p>
+            </div>
+        </div>
+      </section>
+
+      <div class="products-grid">
+        <div class="product-card">
+          <div class="product-image-placeholder">
+            <i class="fas fa-terminal"></i>
+          </div>
+          <h2>GO6 Console</h2>
+          <p class="price free">Free</p>
+          <p class="description">The powerful core of GO6 Raider, operated via a command-line interface. Perfect for users comfortable with console commands and seeking raw performance for essential raiding tasks.</p>
+
+          <div class="product-features-title">Core Features:</div>
+          <ul>
+            <li><i class="fas fa-sign-in-alt"></i> Server Joining</li>
+            <li><i class="fas fa-comment-dots"></i> Basic Message Spamming</li>
+            <li><i class="fas fa-check-circle"></i> Token Validity Checking</li>
+            <li><i class="fas fa-network-wired"></i> Proxy Support</li>
+            <li><i class="fas fa-cog"></i> File-based Configuration</li>
+            <li><i class="fas fa-bolt"></i> Optimized for Speed</li>
+          </ul>
+          <div class="product-buttons">
+            <a href="https://github.com/curveg/GO6-Console-Raider" class="btn btn-download"><i class="fas fa-download"></i> Download Now</a>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-image-placeholder">
+            <img src="/media/go6Raider.png" alt="Go6 Raider GUI Preview">
+          </div>
+          <h2>Go6 GUI/UI</h2>
+          <p class="price">€10.00 <span class="lifetime-badge">Lifetime</span></p>
+          <p class="description">The complete Go6 Raider experience with an intuitive and beautiful graphical user interface. Manage all raiding tasks with ease, visual feedback, and advanced customization options.</p>
+
+          <div class="product-features-title">All Features Included:</div>
+          <ul>
+            <li><i class="fas fa-desktop"></i> Intuitive Graphical Interface</li>
+            <li><i class="fas fa-server"></i> Advanced Server Joiner</li>
+            <li><i class="fas fa-shield-alt"></i> Multi-Type Verification Bypass</li>
+            <li><i class="fas fa-comments"></i> Rich Message Spammer</li>
+            <li><i class="fas fa-user-cog"></i> Full Token Customization</li>
+            <li><i class="fas fa-clipboard-check"></i> Token Checker & Manager</li>
+            <li><i class="fas fa-users-viewfinder"></i> Member ID Fetcher</li>
+            <li><i class="fas fa-rocket"></i> Server Booster Management</li>
+            <li><i class="fas fa-fingerprint"></i> Easy Token Login (UI)</li>
+            <li><i class="fas fa-tools"></i> Graphical App Settings</li>
+            <li><i class="fas fa-terminal"></i> Real-time Console Log</li>
+          </ul>
+          <div class="product-buttons">
+            <a href="#" class="btn btn-stripe"><i class="fab fa-stripe-s"></i> Pay with Stripe</a>
+            <a href="#" class="btn btn-paypal"><i class="fab fa-paypal"></i> Pay with PayPal</a>
+          </div>
+        </div>
+      </div>
+
+      <section class="payment-info-section">
+        <h3><i class="fas fa-credit-card"></i> Secure Payments & Delivery</h3>
+        <p>We use trusted payment processors like Stripe and PayPal for secure transactions. Digital products are delivered instantly upon successful payment.</p>
+        <p>All free tools are available for direct download.</p>
+        <div class="payment-icons">
+            <i class="fab fa-stripe"></i>
+            <i class="fab fa-paypal"></i>
+            <i class="fab fa-cc-visa"></i>
+            <i class="fab fa-cc-mastercard"></i>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const preEntryScreen = document.getElementById('pre-entry-screen');
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+    const mainNav = document.querySelector('.main-nav');
+    const body = document.body;
+    const root = document.documentElement;
+    const faviconLink = document.querySelector('link[rel="icon"]');
+
+    // Define primary favicon path
+    const primaryFaviconPath = '/media/logo.png'; // Your main favicon
+    const primaryFaviconType = 'image/png';
+
+
+    let lenis;
+    if (window.Lenis) {
+        lenis = new Lenis({
+            duration: 1.3,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 0.8,
+            smoothTouch: false,
+            touchMultiplier: 1.5,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+
+    function getMediaPath(fileName) {
+      return '/media/' + fileName;
+    }
+
+    // Ensure initial loading GIF for icon and pre-entry image
+    if (faviconLink) { faviconLink.href = getMediaPath('loading.gif'); faviconLink.type = 'image/gif'; }
+    const preEntryImg = preEntryScreen ? preEntryScreen.querySelector('img') : null;
+    if (preEntryImg) { preEntryImg.src = getMediaPath('loading.gif'); }
+
+    // Set other images
+    const navLogoImg = document.querySelector('.nav-logo img');
+    if (navLogoImg) { navLogoImg.src = getMediaPath('logo.png'); }
+    const guiProductImg = document.querySelector('.product-image-placeholder img[alt="Go6 Raider GUI Preview"]');
+    if (guiProductImg) { guiProductImg.src = getMediaPath('go6Raider.png');}
+
+
+    function showMainContent() {
+        if(mainNav) mainNav.classList.add('visible');
+        if(mainContentWrapper) mainContentWrapper.classList.add('visible');
+        body.classList.add('content-visible');
+        if (faviconLink) { // Change favicon after content is shown
+            faviconLink.href = primaryFaviconPath;
+            faviconLink.type = primaryFaviconType;
+        }
+        initializePageScripts(); // Initialize other scripts after main content is visible
+    }
+
+    if (preEntryScreen && getComputedStyle(preEntryScreen).display !== 'none') {
+      preEntryScreen.addEventListener('click', function() {
+        this.classList.add('hidden');
+        // Wait for opacity transition to finish before potentially expensive operations
+        setTimeout(showMainContent, 50); // Adjusted timing slightly
+      }, { once: true });
+    } else {
+      if(preEntryScreen) preEntryScreen.style.display = 'none'; // Hide it immediately if it wasn't meant to be shown
+      showMainContent();
+    }
+
+
+    function initializePageScripts() {
+      const burger = document.querySelector('.nav-burger');
+      const navMenu = document.querySelector('.nav-links');
+      const navMenuId = navMenu ? (navMenu.id || 'nav-links-main') : 'nav-links-main';
+      if (navMenu && !navMenu.id) navMenu.id = navMenuId;
+      if(burger && navMenu) burger.setAttribute('aria-controls', navMenuId);
+
+      const navLinkItems = document.querySelectorAll('.nav-links > li');
+
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          const isExpanded = navMenu.classList.toggle('nav-active');
+          burger.setAttribute('aria-expanded', isExpanded.toString());
+          navLinkItems.forEach((item, index) => {
+              if (item.style.animation) { item.style.animation = ''; }
+              else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
+          });
+          burger.classList.toggle('toggle');
+        });
+      }
+
+      if (navMenu) {
+          navMenu.querySelectorAll('a').forEach(link => {
+              if (!link.classList.contains('nav-projects-link')) { // Exclude dropdown toggle itself
+                  link.addEventListener('click', (e) => {
+                      const href = link.getAttribute('href');
+                      if (href && href.startsWith('#') && lenis) {
+                          e.preventDefault();
+                          lenis.scrollTo(href);
+                      }
+                      // Close mobile menu on item click (if not a dropdown parent)
+                      if (navMenu.classList.contains('nav-active') && !link.closest('.nav-item-dropdown')) {
+                          navMenu.classList.remove('nav-active');
+                          if (burger) {
+                            burger.classList.remove('toggle');
+                            burger.setAttribute('aria-expanded', 'false');
+                          }
+                          navLinkItems.forEach(item => item.style.animation = '');
+                      }
+                  });
+              }
+          });
+      }
+
+      const projectsLink = document.querySelector('.nav-projects-link');
+      if (projectsLink) {
+          projectsLink.addEventListener('click', function(e) {
+              // This logic is for mobile dropdown toggle
+              if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
+                  e.preventDefault(); // Prevent navigation for the dropdown parent on mobile when menu is open
+                  const parentLi = this.parentElement;
+                  const isDropdownOpen = parentLi.classList.toggle('dropdown-open');
+                  this.setAttribute('aria-expanded', isDropdownOpen.toString());
+              }
+          });
+      }
+
+      const blobs = [document.querySelector('.blob-1'), document.querySelector('.blob-2')];
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          updateBlobPositions();
+      });
+
+      function updateBlobPositions() {
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          // Make movement more subtle
+          const moveXFactor = (mouseX - centerX) * 0.015;
+          const moveYFactor = (mouseY - centerY) * 0.015;
+
+          if (blobs[0]) {
+              root.style.setProperty('--blob1-mouse-x', `${moveXFactor}px`);
+              root.style.setProperty('--blob1-mouse-y', `${moveYFactor}px`);
+          }
+          if (blobs[1]) {
+              root.style.setProperty('--blob2-mouse-x', `${moveXFactor * -1.1}px`); // Slightly different movement
+              root.style.setProperty('--blob2-mouse-y', `${moveYFactor * 1.1}px`);
+          }
+      }
+      updateBlobPositions(); // Initial position
+
+      if (lenis) {
+          lenis.on('scroll', (e) => {
+              const scrollY = e.animatedScroll;
+              // Make scroll effect more subtle
+              if (blobs[0]) { root.style.setProperty('--blob1-scroll-y', `${scrollY * 0.04}px`); }
+              if (blobs[1]) { root.style.setProperty('--blob2-scroll-y', `${scrollY * -0.025}px`); }
+          });
+      }
+
+
+      const currentPagePath = window.location.pathname;
+      const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
+      const normalizePath = (path) => {
+          if (!path) return '';
+          if (!path.startsWith('/')) path = '/' + path;
+          if (path === '/' || path.endsWith('/index.html') || path === '/index') return '/index.html';
+          if (path.endsWith('/') && path !== '/') path = path.slice(0, -1);
+          return path.includes('.') ? path : path + '.html';
+      };
+
+      let normalizedCurrentPagePath = normalizePath(currentPagePath);
+
+      allNavAnchors.forEach(anchor => {
+        let linkHref = anchor.getAttribute('href');
+        if (!linkHref || linkHref === '#') return;
+        let normalizedLinkHref = normalizePath(linkHref);
+
+        if (normalizedLinkHref === normalizedCurrentPagePath) {
+          anchor.classList.add('active');
+          const dropdownParent = anchor.closest('.nav-item-dropdown');
+          if (dropdownParent) {
+            const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
+            if (projectsMainLink) projectsMainLink.classList.add('active');
+          }
+        } else {
+          if (!(anchor.id === 'nav-projects' && anchor.closest('.nav-item-dropdown')?.querySelector('.dropdown-menu a.active'))) {
+              anchor.classList.remove('active');
+          }
+        }
+      });
+      const projectPageIdentifiers = ['/g06.html', '/api-wrapper.html', '/exchange-server.html', '/app-raider.html'];
+      if (projectPageIdentifiers.some(id => normalizedCurrentPagePath.endsWith(id))) {
+          const projectsMainLink = document.getElementById('nav-projects');
+          if (projectsMainLink && !projectsMainLink.classList.contains('active')) {
+            // Check if a sub-item is active before adding 'active' to parent
+             if(document.querySelector('.dropdown-menu a.active[href*="'+normalizedCurrentPagePath.split('/').pop()+'"]')) {
+                projectsMainLink.classList.add('active');
+             }
+          }
+      }
+    }
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GO6 - About Us</title>
+  <meta name="description" content="Learn about GO6 Projects: our mission, values, and the team dedicated to creating powerful tools.">
+  <link rel="icon" href="/media/loading.gif" type="image/gif">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://g06.lol/about.html">
+  <meta property="og:title" content="Go6 Projects - About Us">
+  <meta property="og:description" content="Learn about GO6 Projects: our mission, values, and the team dedicated to creating powerful tools.">
+  <meta property="og:image" content="https://g06.lol/media/logo.png">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://g06.lol/about.html">
+  <meta property="twitter:title" content="Go6 Projects - About Us">
+  <meta property="twitter:description" content="Learn about GO6 Projects: our mission, values, and the team dedicated to creating powerful tools.">
+  <meta property="twitter:image" content="https://g06.lol/media/logo.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html {
+        scroll-behavior: smooth;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --primary-purple: #de5af0;
+      --light-purple: #a78bfa;
+      --discord-blue: #5865F2;
+      --dark-bg: #0a0a0a;
+      --medium-bg: #141414;
+      --text-primary: #fff;
+      --text-secondary: #aaa;
+      --text-tertiary: #999;
+      --nav-height: 70px;
+
+      --blob1-mouse-x: 0px; --blob1-mouse-y: 0px; --blob1-scroll-y: 0px;
+      --blob2-mouse-x: 0px; --blob2-mouse-y: 0px; --blob2-scroll-y: 0px;
+    }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--primary-purple); color: white;
+      padding: 8px 12px; z-index: 10001;
+      text-decoration: none;
+      transition: top 0.3s ease-in-out; border-radius: 0 0 5px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    #pre-entry-screen {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background-color: var(--dark-bg); display: flex; align-items: center;
+      justify-content: center; z-index: 2000; cursor: pointer;
+      transition: opacity 0.5s ease-out, visibility 0.5s ease-out 0.5s;
+    }
+    #pre-entry-screen img {
+        max-width: 80%; max-height: 80%; object-fit: contain; border-radius: 10px;
+        animation: pulse-pre-entry 2s infinite ease-in-out;
+    }
+    #pre-entry-screen.hidden { opacity: 0; visibility: hidden; }
+
+    @keyframes pulse-pre-entry {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    body {
+      background-color: var(--dark-bg); color: var(--text-primary);
+      min-height: 100vh; position: relative; padding-top: 0;
+      overflow-x: hidden;
+    }
+    body.content-visible { padding-top: var(--nav-height); }
+
+    #main-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center; justify-content: flex-start; /* Changed to flex-start for scrolling */
+      padding: 1rem; position: relative;
+      min-height: calc(100vh - var(--nav-height));
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+    }
+    #main-content-wrapper.visible {
+        opacity: 1; transform: translateY(0);
+    }
+
+    .purple-blob {
+      position: absolute; border-radius: 50%; filter: blur(80px);
+      opacity: 0.5; z-index: 0;
+      transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .blob-1 {
+        width: 400px; height: 400px; background: var(--primary-purple); top: -150px; left: -150px;
+        transform: translate(var(--blob1-mouse-x), var(--blob1-mouse-y)) translateY(var(--blob1-scroll-y));
+    }
+    .blob-2 {
+        width: 500px; height: 500px; background: var(--light-purple); bottom: -200px; right: -200px;
+        transform: translate(var(--blob2-mouse-x), var(--blob2-mouse-y)) translateY(var(--blob2-scroll-y));
+    }
+
+    .main-nav {
+      display: none; justify-content: space-between; align-items: center;
+      width: 100%; height: var(--nav-height); padding: 0 2rem;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background-color: rgba(10, 10, 10, 0.3); backdrop-filter: blur(8px);
+      transition: background-color 0.3s ease, opacity 0.5s ease-in-out 0.1s, visibility 0.5s ease-in-out 0.1s;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1); opacity: 0; visibility: hidden;
+    }
+    .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
+    .nav-logo a { display: flex; align-items: center; height: 100%; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; }
+
+    .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
+    .nav-links li {
+      position: relative;
+      margin-left: 2.5rem; display: flex; align-items: center; height: 100%;
+    }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 1rem; font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease; position: relative; padding: 0.3rem 0;
+      display: flex; align-items: center;
+    }
+    .nav-links a .fa-caret-down { margin-left: 0.4rem; transition: transform 0.3s ease; }
+    .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
+
+    .nav-links a::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+      transform: translateX(-50%); background-color: var(--primary-purple); transition: width 0.3s ease;
+    }
+    .nav-links li > a:hover { color: var(--text-primary); transform: translateY(-2px); }
+    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .dropdown-menu {
+      opacity: 0; visibility: hidden; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(20, 20, 20, 0.85); backdrop-filter: blur(5px);
+      border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
+      list-style: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); margin-top: 5px;
+      transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
+    }
+    .nav-links li:hover > .dropdown-menu,
+    .nav-links li.dropdown-open > .dropdown-menu {
+      opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease-out, visibility 0s linear 0s, transform 0.25s ease-out;
+    }
+    .dropdown-menu li { margin-left: 0; width: 100%; height: auto; }
+    .dropdown-menu a {
+      display: block; padding: 0.75rem 1.5rem; color: var(--text-secondary);
+      font-size: 0.95rem; white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+    .dropdown-menu a:hover {
+      background-color: var(--primary-purple); color: var(--text-primary);
+      padding-left: 1.8rem; transform: translateY(0);
+    }
+    .dropdown-menu a::after { display: none; }
+
+    .nav-burger {
+        display: none; cursor: pointer; flex-direction: column;
+        justify-content: space-around; width: 25px; height: 21px;
+    }
+    .nav-burger div {
+        width: 25px; height: 3px; background-color: var(--text-primary);
+        transition: all 0.3s ease; border-radius: 1px;
+    }
+
+    .container {
+      position: relative; z-index: 1; max-width: 1200px; width: 100%;
+      padding: 2rem; 
+      text-align: center;
+    }
+    .page-header { margin-bottom: 2.5rem; padding-top: 2rem; }
+    .page-title {
+      font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--primary-purple), var(--light-purple));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      display: inline-block;
+    }
+    .page-title span {
+        display: inline-block; opacity: 0;
+        background: linear-gradient(90deg, var(--primary-purple), var(--light-purple));
+        -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .page-subtitle {
+      color: var(--text-secondary); font-size: 1.3rem; margin-bottom: 2.5rem; 
+      max-width: 800px; line-height: 1.7; margin-left: auto; margin-right: auto;
+    }
+
+    .about-section {
+        text-align: left;
+        margin-bottom: 3rem;
+        padding: 2rem; 
+        background: rgba(20, 20, 20, 0.4);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.07);
+        opacity: 0;
+    }
+    .about-section h2 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    .about-section h2 .fas {
+        color: var(--primary-purple);
+        font-size: 1.8rem;
+    }
+    .about-section p {
+        color: var(--text-tertiary);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+    .about-section p:last-child {
+        margin-bottom: 0; 
+    }
+
+
+    .values-grid, .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.8rem; 
+        text-align: left;
+        margin-top: 1.8rem; 
+    }
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    }
+
+
+    .value-card {
+      background: rgba(25, 25, 25, 0.75);
+      border-radius: 15px; padding: 1.8rem;
+      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex; flex-direction: column;
+      opacity: 0;
+    }
+    .value-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(222, 90, 240, 0.1); 
+    }
+    .value-card h3 {
+      font-size: 1.6rem; margin-bottom: 0.8rem; color: var(--text-primary);
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .value-card h3 .fas {
+      color: var(--light-purple);
+      font-size: 1.3rem;
+      transition: transform 0.3s ease;
+    }
+    .value-card:hover h3 .fas {
+        transform: scale(1.1) rotate(-5deg);
+    }
+    .value-card p {
+      color: var(--text-tertiary); font-size: 0.95rem; line-height: 1.6;
+      margin-bottom: 0; 
+      flex-grow: 1;
+    }
+
+    .team-card {
+      background: rgba(28, 28, 28, 0.8); 
+      border-radius: 15px;
+      padding: 2rem; 
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+    }
+    .team-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 22px rgba(167, 139, 250, 0.12); 
+    }
+    .team-card-inner {
+        display: flex;
+        align-items: flex-start;
+        gap: 1.5rem; 
+    }
+    .team-card-avatar {
+        flex-shrink: 0;
+        padding-top: 0.3rem; 
+    }
+    .team-card-avatar .fas {
+        font-size: 2.8rem; 
+        color: var(--light-purple);
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+    .team-card:hover .team-card-avatar .fas {
+        transform: scale(1.1);
+        color: var(--primary-purple);
+    }
+    .team-card-info {
+        flex-grow: 1;
+        text-align: left;
+    }
+    .team-card-info h3 {
+        font-size: 1.6rem;
+        color: var(--text-primary);
+        margin-bottom: 0.3rem; 
+    }
+    .team-card-info .team-role {
+        font-size: 0.95rem; 
+        color: var(--primary-purple);
+        font-weight: 500;
+        display: block;
+        margin-bottom: 0.8rem; 
+    }
+    .team-card-info p {
+        color: var(--text-tertiary);
+        font-size: 0.95rem; 
+        line-height: 1.65; 
+        margin-bottom: 1rem; 
+    }
+    .team-card-info p:last-child {
+        margin-bottom: 0;
+    }
+    .team-social-links {
+        margin-top: 1rem; 
+        display: flex;
+        gap: 1rem; 
+    }
+    .team-social-links a {
+        color: var(--text-secondary);
+        font-size: 1.4rem; 
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+    .team-social-links a:hover {
+        color: var(--primary-purple);
+        transform: scale(1.15);
+    }
+
+
+    .contact-section {
+        text-align: center;
+        padding: 3rem 1.5rem; 
+        background: rgba(20, 20, 20, 0.6); 
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.1); 
+        margin-top: 3rem; 
+        opacity: 0;
+    }
+    .contact-section h2 {
+        font-size: 2.2rem; 
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem; 
+        display: flex; 
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+    }
+    .contact-section h2 .fas { 
+        color: var(--primary-purple);
+        font-size: 1.8rem;
+    }
+
+    .contact-section p {
+        color: var(--text-tertiary);
+        font-size: 1.1rem;
+        line-height: 1.7;
+        max-width: 600px; 
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1.5rem; 
+    }
+    .contact-section .email-link {
+        display: inline-block;
+        font-size: 1.2rem;
+        color: var(--text-primary);
+        background-color: var(--primary-purple);
+        padding: 0.9rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        margin-top: 0.5rem; 
+        margin-bottom: 1.8rem; 
+        font-weight: 500;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .contact-section .email-link:hover {
+        background-color: var(--light-purple);
+        transform: translateY(-2px) scale(1.02);
+    }
+     .contact-section p.discord-prompt { 
+        margin-top: 1.5rem; 
+        margin-bottom: 1rem; 
+    }
+    .contact-section .discord-link-btn {
+        display: inline-flex;
+        align-items: center;
+        font-size: 1.2rem; 
+        background: var(--discord-blue); color: white;
+        padding: 0.9rem 2rem; 
+        border-radius: 50px; text-decoration: none;
+        font-weight: 500; transition: background-color 0.3s ease, transform 0.3s ease;
+        margin-top: 0.5rem; 
+    }
+    .contact-section .discord-link-btn .fab {
+        margin-right: 0.7rem; 
+        font-size: 1.3em; 
+    }
+    .contact-section .discord-link-btn:hover {
+        background-color: #4a54c7;
+        transform: translateY(-2px) scale(1.02);
+    }
+
+
+    @keyframes flyInUp {
+        from { opacity: 0; transform: translateY(50px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInChar {
+        from { opacity: 0; transform: translateY(10px) scale(0.9); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 1.5rem; }
+      .page-title { font-size: 2.8rem; } 
+      .page-subtitle { font-size: 1.15rem; } 
+      .about-section { padding: 1.5rem; }
+      .about-section h2 { font-size: 2rem; }
+      .about-section h2 .fas { font-size: 1.6rem; }
+      .about-section p { font-size: 1rem; }
+      .value-card h3 { font-size: 1.4rem; }
+      .team-card { padding: 1.5rem; }
+      .team-card-info h3 { font-size: 1.4rem; }
+      .team-card-avatar .fas { font-size: 2.5rem; width: 40px; height: 40px; line-height: 40px;}
+      .team-card-inner { gap: 1rem; }
+      .team-social-links { justify-content: flex-start; }
+
+
+      .contact-section { padding: 2rem 1rem; }
+      .contact-section h2 { font-size: 2rem; }
+      .contact-section p { font-size: 1rem; }
+      .contact-section .email-link { font-size: 1.1rem; padding: 0.8rem 1.6rem;} 
+      .contact-section .discord-link-btn { font-size: 1.1rem; padding: 0.8rem 1.6rem;} 
+
+
+      .nav-burger { display: flex; }
+      .nav-links {
+        position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.95);
+        backdrop-filter: blur(10px); display: flex; flex-direction: column;
+        align-items: stretch; width: 60%; transform: translateX(100%);
+        transition: transform 0.5s ease-in-out; padding-top: 1rem;
+        overflow-y: auto;
+      }
+      .nav-links li {
+        opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%;
+        display: flex; flex-direction: column; align-items: stretch; height: auto;
+      }
+      .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
+      .nav-links li > a:hover { transform: none; }
+
+      .dropdown-menu {
+        opacity: 0; visibility: hidden; max-height: 0; overflow: hidden;
+        position: static; transform: none; width: 100%;
+        box-shadow: none; border-radius: 0; margin-top: 0; padding-left: 1.5rem;
+        background-color: rgba(15, 15, 15, 0.7);
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, visibility 0s linear 0.3s, max-height 0.3s ease, transform 0.3s ease;
+      }
+      .nav-links li.dropdown-open > .dropdown-menu {
+        opacity: 1; visibility: visible; max-height: 400px; transform: translateY(0);
+        transition-delay: 0s, 0s, 0s, 0s;
+      }
+
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+      .dropdown-menu a:hover { background-color: var(--primary-purple); padding-left: 1.8rem; }
+      .nav-active { transform: translateX(0%); }
+      @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
+      .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+      .toggle .line2 { opacity: 0; }
+      .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+    }
+    @media (max-width: 480px) {
+      .nav-links { width: 75%; }
+      .page-title { font-size: 2.4rem; }
+      .page-subtitle { font-size: 1.1rem; }
+      .team-card-inner { flex-direction: column; align-items: center; text-align:center; }
+      .team-card-avatar { margin-bottom: 1rem; } 
+      .team-card-info { text-align:center; }
+      .team-social-links { justify-content: center; }
+      .contact-section p { font-size: 0.95rem;}
+      .contact-section .email-link, .contact-section .discord-link-btn { width: calc(100% - 2rem); margin-left: auto; margin-right: auto; display: block; box-sizing: border-box;}
+      .contact-section .discord-link-btn { display: flex; justify-content: center; }
+
+
+    }
+  </style>
+</head>
+<body>
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <a href="/index.html"><img src="/media/logo.png" alt="Go6 Logo"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/index.html" id="nav-home">Home</a></li>
+      <li><a href="/about.html" id="nav-about">About Us</a></li>
+      <li class="nav-item-dropdown">
+        <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
+          Projects <i class="fas fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav-projects">
+          <li><a href="/g06.html">G06 Raider</a></li>
+          <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
+          <li><a href="/exchange-server.html">Go6 Exchange Server</a></li>
+        <li><a href="/bot-raider.html">Bot Raider Application</a></li>
+      </ul>
+    </li>
+    <li><a href="/store.html" id="nav-store">Store</a></li>
+    <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
+  </ul>
+  <div class="nav-burger">
+      <div class="line1"></div> <div class="line2"></div> <div class="line3"></div>
+  </div>
+</nav>
+
+  <div id="main-content-wrapper">
+    <div class="purple-blob blob-1"></div>
+    <div class="purple-blob blob-2"></div>
+
+    <main class="container" id="main-content">
+      <div class="page-header">
+        <h1 class="page-title">About GO6 Projects</h1>
+        <p class="page-subtitle">
+          Discover the passion, mission, and the people driving innovation at GO6. We're committed to developing cutting-edge tools and platforms that redefine digital interaction.
+        </p>
+      </div>
+
+      <section class="about-section content-to-animate">
+        <h2><i class="fas fa-scroll"></i>Our Story</h2>
+        <p>GO6 Projects began with a shared vision: to create powerful, intuitive, and accessible digital tools. Born from a passion for technology and a desire to push boundaries, our journey started with small experiments and grew into a collaborative effort to build impactful applications.</p>
+        <p>We believe in the power of code to solve problems and enhance experiences. Every project we undertake is a step towards a more efficient and connected digital future.</p>
+      </section>
+
+      <section class="about-section content-to-animate">
+        <h2><i class="fas fa-bullseye"></i>Our Mission</h2>
+        <p>Our mission is to empower users by providing innovative and reliable software solutions. We strive to develop tools that are not only powerful under the hood but also a joy to use, simplifying complex tasks and unlocking new possibilities for our community.</p>
+      </section>
+
+      <section class="about-section content-to-animate">
+        <h2><i class="fas fa-binoculars"></i>Our Vision</h2>
+        <p>We envision a future where technology seamlessly integrates with daily life, enhancing productivity and creativity. GO6 Projects aims to be at the forefront of this evolution, continuously exploring new frontiers and delivering next-generation applications that inspire and innovate.</p>
+      </section>
+
+      <section class="about-section content-to-animate">
+        <h2><i class="fas fa-gem"></i>Our Core Values</h2>
+        <div class="values-grid">
+          <div class="value-card content-to-animate">
+            <h3><i class="fas fa-lightbulb"></i>Innovation</h3>
+            <p>We constantly seek creative solutions and embrace new technologies to deliver cutting-edge products.</p>
+          </div>
+          <div class="value-card content-to-animate">
+            <h3><i class="fas fa-users"></i>Community</h3>
+            <p>We build for and with our users, fostering a collaborative environment where feedback drives improvement.</p>
+          </div>
+          <div class="value-card content-to-animate">
+            <h3><i class="fas fa-shield-alt"></i>Reliability</h3>
+            <p>Our tools are built to be robust and dependable, ensuring a consistent and trustworthy experience.</p>
+          </div>
+           <div class="value-card content-to-animate">
+            <h3><i class="fas fa-search"></i>Transparency</h3>
+            <p>We believe in open communication and clear practices in our development and interactions.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-section content-to-animate">
+        <h2><i class="fas fa-users-cog"></i>The Team</h2>
+        <p>GO6 is powered by a dedicated group of developers, designers, and thinkers passionate about technology. Our collective expertise and collaborative spirit are the driving force behind every line of code and every innovative feature we release.</p>
+        <div class="team-grid">
+          <div class="team-card content-to-animate">
+            <div class="team-card-inner">
+              <div class="team-card-avatar">
+                <i class="fas fa-paint-brush"></i> </div>
+              <div class="team-card-info">
+                <h3>Curve</h3>
+                <span class="team-role">Lead Frontend Developer, Strategist & Community Engagement</span>
+                <p>Masterminds the user experience with exceptional frontend development skills. Also drives project strategy and fosters community connections with insights from social engineering and OSINT.</p>
+                <div class="team-social-links">
+                  <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Curve's Telegram">
+                    <i class="fab fa-telegram-plane"></i>
+                  </a>
+                  <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Curve's Website">
+                    <i class="fas fa-globe"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="team-card content-to-animate">
+            <div class="team-card-inner">
+              <div class="team-card-avatar">
+                <i class="fas fa-cogs"></i> </div>
+              <div class="team-card-info">
+                <h3>Gekkefries (Sam)</h3>
+                <span class="team-role">Lead Backend Developer & Technical Operations</span>
+                <p>Architects our robust backend systems, specializing in Python (Flask) and API integrations. Manages project workflows and ensures technical excellence across platforms.</p>
+                <div class="team-social-links">
+                  <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Gekkefries' Discord Profile">
+                    <i class="fab fa-discord"></i>
+                  </a>
+                  <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Gekkefries' Telegram">
+                    <i class="fab fa-telegram-plane"></i>
+                  </a>
+                  <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Gekkefries' Website">
+                    <i class="fas fa-link"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section content-to-animate">
+        <h2><i class="fas fa-paper-plane"></i>Get In Touch</h2>
+        <p>Have questions, feedback, or ideas? We'd love to hear from you!</p>
+        <a href="mailto:help@g06.lol" class="email-link">
+            <i class="fas fa-envelope" style="margin-right: 0.5em;"></i> help@g06.lol
+        </a>
+        <p class="discord-prompt">You can also join our community on Discord for discussions and updates:</p>
+        <a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer" class="discord-link-btn">
+          <i class="fab fa-discord"></i> Join our Discord
+        </a>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const preEntryScreen = document.getElementById('pre-entry-screen');
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+    const mainNav = document.querySelector('.main-nav');
+    const body = document.body;
+    const root = document.documentElement;
+
+    let lenis;
+    if (window.Lenis) {
+        lenis = new Lenis({
+            duration: 1.3,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 0.8,
+            smoothTouch: false,
+            touchMultiplier: 1.5,
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+
+    function getMediaPath(fileName) { return '/media/' + fileName; }
+
+    const loadingGifIcon = document.querySelector('link[rel="icon"]');
+    if (loadingGifIcon) { loadingGifIcon.href = getMediaPath('loading.gif'); }
+
+
+    const loadingGif = preEntryScreen ? preEntryScreen.querySelector('img') : null;
+    if (loadingGif) { loadingGif.src = getMediaPath('loading.gif'); }
+
+    const navLogoImg = document.querySelector('.nav-logo img');
+    if (navLogoImg) { navLogoImg.src = getMediaPath('logo.png'); }
+
+    if (preEntryScreen && getComputedStyle(preEntryScreen).display !== 'none') {
+      preEntryScreen.addEventListener('click', function() {
+        this.classList.add('hidden');
+        setTimeout(() => {
+            if(mainNav) mainNav.classList.add('visible');
+            if(mainContentWrapper) mainContentWrapper.classList.add('visible');
+            body.classList.add('content-visible');
+            initializePageScripts();
+        }, 50);
+      }, { once: true });
+    } else {
+      if(preEntryScreen) preEntryScreen.classList.add('hidden');
+      if(mainNav) mainNav.classList.add('visible');
+      if(mainContentWrapper) mainContentWrapper.classList.add('visible');
+      body.classList.add('content-visible');
+      initializePageScripts();
+    }
+
+    function initializePageScripts() {
+      const burger = document.querySelector('.nav-burger');
+      const navMenu = document.querySelector('.nav-links');
+      const navLinkItems = document.querySelectorAll('.nav-links > li');
+
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          navMenu.classList.toggle('nav-active');
+          navLinkItems.forEach((item, index) => {
+              if (item.style.animation) { item.style.animation = ''; }
+              else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
+          });
+          burger.classList.toggle('toggle');
+        });
+      }
+
+      if (navMenu) {
+          navMenu.querySelectorAll('a').forEach(link => {
+              if (!link.classList.contains('nav-projects-link')) { 
+                  link.addEventListener('click', (e) => {
+                      const href = link.getAttribute('href');
+                      if (href && href.startsWith('#') && lenis) {
+                          e.preventDefault();
+                          lenis.scrollTo(href);
+                      }
+                      if (navMenu.classList.contains('nav-active') && !link.closest('.dropdown-menu')) {
+                          navMenu.classList.remove('nav-active');
+                          if (burger) burger.classList.remove('toggle');
+                          navLinkItems.forEach(item => item.style.animation = '');
+                      }
+                  });
+              }
+          });
+      }
+
+      const projectsLink = document.querySelector('.nav-projects-link');
+      if (projectsLink) {
+          projectsLink.addEventListener('click', function(e) {
+              if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
+                  e.preventDefault();
+                  const parentLi = this.parentElement;
+                  parentLi.classList.toggle('dropdown-open');
+                  this.setAttribute('aria-expanded', parentLi.classList.contains('dropdown-open').toString());
+              }
+          });
+      }
+
+      const blobs = [document.querySelector('.blob-1'), document.querySelector('.blob-2')];
+      let mouseX = window.innerWidth / 2;
+      let mouseY = window.innerHeight / 2;
+
+      document.addEventListener('mousemove', function(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          updateBlobPositions();
+      });
+
+      function updateBlobPositions() {
+          const centerX = window.innerWidth / 2;
+          const centerY = window.innerHeight / 2;
+          const moveXFactor = (mouseX - centerX) * 0.03;
+          const moveYFactor = (mouseY - centerY) * 0.03;
+
+          if (blobs[0]) {
+              root.style.setProperty('--blob1-mouse-x', `${moveXFactor * 1}px`);
+              root.style.setProperty('--blob1-mouse-y', `${moveYFactor * 1}px`);
+          }
+          if (blobs[1]) {
+              root.style.setProperty('--blob2-mouse-x', `${moveXFactor * 1.2 * -1}px`);
+              root.style.setProperty('--blob2-mouse-y', `${moveYFactor * 1.2}px`);
+          }
+      }
+      updateBlobPositions();
+
+      if (lenis) {
+          lenis.on('scroll', (e) => {
+              const scrollY = e.animatedScroll;
+              if (blobs[0]) {
+                  root.style.setProperty('--blob1-scroll-y', `${scrollY * 0.08}px`);
+              }
+              if (blobs[1]) {
+                  root.style.setProperty('--blob2-scroll-y', `${scrollY * -0.05}px`);
+              }
+          });
+      }
+
+      const currentPagePath = window.location.pathname;
+      const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
+      const normalizePath = (path) => {
+          if (!path) return '';
+          if (!path.startsWith('/')) path = '/' + path;
+          if (path === '/' || path.endsWith('/index.html') || path === '/index') return '/index.html';
+          // Remove trailing slash if not root
+          if (path.endsWith('/') && path !== '/') path = path.slice(0, -1);
+          return path.includes('.') ? path : path + '.html';
+      };
+
+      let normalizedCurrentPagePath = normalizePath(currentPagePath);
+
+      allNavAnchors.forEach(anchor => {
+        let linkHref = anchor.getAttribute('href');
+        if (!linkHref || linkHref === '#') return; 
+        let normalizedLinkHref = normalizePath(linkHref);
+
+        if (normalizedLinkHref === normalizedCurrentPagePath) {
+          anchor.classList.add('active');
+          const dropdownParent = anchor.closest('.nav-item-dropdown');
+          if (dropdownParent) {
+            const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
+            if (projectsMainLink) projectsMainLink.classList.add('active');
+          }
+        } else {
+          if (!(anchor.id === 'nav-projects' && anchor.closest('.nav-item-dropdown')?.querySelector('.dropdown-menu a.active'))) {
+             anchor.classList.remove('active');
+          }
+        }
+      });
+
+      const projectPageIdentifiers = ['/g06.html', '/api-wrapper.html', '/exchange-server.html'];
+      if (projectPageIdentifiers.some(id => normalizedCurrentPagePath.endsWith(id))) {
+          const projectsMainLink = document.getElementById('nav-projects');
+          if (projectsMainLink) projectsMainLink.classList.add('active');
+      }
+
+
+      const pageTitle = document.querySelector('.page-title');
+      if (pageTitle && pageTitle.textContent && !pageTitle.dataset.animated) {
+          const text = pageTitle.textContent.trim();
+          pageTitle.innerHTML = '';
+          text.split('').forEach((char, index) => {
+              const span = document.createElement('span');
+              span.textContent = char === ' ' ? '\u00A0' : char;
+              span.style.animation = `fadeInChar 0.3s ease-out forwards ${index * 0.04}s`;
+              pageTitle.appendChild(span);
+          });
+          pageTitle.dataset.animated = "true";
+      }
+
+      const animatedElements = document.querySelectorAll('.content-to-animate');
+      if (animatedElements.length > 0 && 'IntersectionObserver' in window) {
+          const observerOptions = { root: null, rootMargin: '0px', threshold: 0.05 }; 
+          const observerCallback = (entries, observer) => {
+              entries.forEach((entry, entryIndex) => { 
+                  if (entry.isIntersecting) {
+                      const delay = entryIndex * 0.1; 
+                      entry.target.style.animation = `flyInUp 0.6s ease-out ${delay}s forwards`;
+                      observer.unobserve(entry.target);
+                  }
+              });
+          };
+          const contentObserver = new IntersectionObserver(observerCallback, observerOptions);
+          animatedElements.forEach(el => contentObserver.observe(el));
+      } else {
+          animatedElements.forEach(el => el.style.opacity = '1');
+      }
+    }
+  });
+  </script>
+</body>
+</html>

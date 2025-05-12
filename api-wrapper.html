@@ -1,0 +1,2073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GO6 - API Wrapper</title>
+  <meta name="description" content="Self-hosted Discord API wrapper by GO6, offering instant performance and local security for your Discord tokens and operations.">
+  <link rel="icon" href="/media/greengo6.png" type="image/png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://g06.lol/api-wrapper.html">
+  <meta property="og:title" content="GO6 API Wrapper - Go6 Projects">
+  <meta property="og:description" content="Explore the Go6 Discord API Wrapper, a locally hosted solution for high-performance Discord interactions.">
+  <meta property="og:image" content="https://g06.lol/media/go6_api_preview.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://g06.lol/api-wrapper.html">
+  <meta property="twitter:title" content="GO6 API Wrapper - Go6 Projects">
+  <meta property="twitter:description" content="Explore the Go6 Discord API Wrapper, a locally hosted solution for high-performance Discord interactions.">
+  <meta property="twitter:image" content="https://g06.lol/media/go6_api_preview.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html {
+      scroll-behavior: smooth; /* Fallback if Lenis fails or for non-Lenis controlled elements */
+      overflow: hidden; /* Hide native HTML scrollbar */
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary-purple: #de5af0;
+      --light-purple: #a78bfa;
+      --discord-blue: #5865F2;
+      --dark-bg: #0a0a0a;
+      --medium-bg: #141414;
+      --card-bg: rgba(22, 22, 22, 0.85);
+      --text-primary: #fff;
+      --text-secondary: #b0b0b0;
+      --text-tertiary: #888;
+      --nav-height: 70px;
+
+      --api-color: #1abc9c;
+      --api-gradient-start: #1dddb2;
+      --api-gradient-end: #2ecc71;
+      --api-accent-dark: #16a085;
+      --api-text-on-accent: #ffffff;
+    }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--primary-purple); color: white;
+      padding: 8px 12px; z-index: 9999; text-decoration: none;
+      transition: top 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+      border-radius: 0 0 5px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      background-color: var(--dark-bg); color: var(--text-primary);
+      min-height: 100vh; position: relative; padding-top: 0;
+      overflow: hidden; /* Hide native body scrollbar */
+      /* Removed overflow-x, overflow-y, -ms-overflow-style, scrollbar-width */
+    }
+    /* Removed body::-webkit-scrollbar */
+
+    body.content-visible { padding-top: var(--nav-height); }
+
+    body.api-wrapper-page .skip-link {
+      background: var(--api-color);
+      color: var(--api-text-on-accent);
+    }
+
+    body.api-wrapper-page .main-nav .nav-links > li > a::after {
+      background-color: var(--api-color);
+    }
+
+    body.api-wrapper-page .main-nav .nav-links > li > a:hover,
+    body.api-wrapper-page .main-nav .nav-links > li > a.active {
+      color: var(--api-color);
+    }
+
+    body.api-wrapper-page .main-nav #nav-projects.active {
+      color: var(--api-color) !important;
+    }
+
+    body.api-wrapper-page .main-nav #nav-projects:hover {
+      color: var(--api-color);
+    }
+
+    body.api-wrapper-page .dropdown-menu a:hover {
+      background-color: var(--api-color) !important;
+      color: var(--api-text-on-accent) !important;
+    }
+    body.api-wrapper-page .dropdown-menu a.active {
+      color: var(--api-color) !important;
+      background-color: rgba(26, 188, 156, 0.15) !important;
+    }
+
+    .api-page-blob-1, .api-page-blob-2 {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .api-page-blob-1 {
+      width: 500px; height: 500px; background: var(--api-color);
+      filter: blur(130px);
+      top: 0%; left: -250px; animation: slowDrift1 28s infinite alternate ease-in-out;
+    }
+    .api-page-blob-2 {
+      width: 600px; height: 600px; background: var(--api-gradient-end);
+      filter: blur(140px);
+      bottom: -5%; right: -300px; animation: slowDrift2 32s infinite alternate ease-in-out;
+    }
+    @keyframes slowDrift1 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(50px, -40px) scale(1.15) rotate(20deg); }
+      100% { transform: translate(-30px, 30px) scale(0.95) rotate(-15deg); }
+    }
+    @keyframes slowDrift2 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(-45px, 35px) scale(1.1) rotate(-18deg); }
+      100% { transform: translate(25px, -25px) scale(0.9) rotate(12deg); }
+    }
+
+    .main-nav {
+      display: none; justify-content: space-between; align-items: center;
+      width: 100%; height: var(--nav-height); padding: 0 2rem;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background-color: rgba(10, 10, 10, 0.45);
+      backdrop-filter: blur(12px);
+      transition: background-color 0.3s ease, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
+    }
+    .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
+    .nav-logo a { display: flex; align-items: center; height: 100%; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
+    .nav-links li { position: relative; margin-left: 2.5rem; display: flex; align-items: center; height: 100%; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 1rem; font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease; position: relative; padding: 0.3rem 0;
+      display: flex; align-items: center;
+    }
+    .nav-links a .fa-caret-down { margin-left: 0.4rem; transition: transform 0.3s ease; }
+    .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
+    .nav-links a::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+      transform: translateX(-50%); background-color: var(--primary-purple);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-links li > a:hover { transform: translateY(-2px); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .dropdown-menu {
+      opacity: 0; visibility: hidden; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+      border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
+      list-style: none; box-shadow: 0 8px 25px rgba(0,0,0,0.35); margin-top: 5px;
+      transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
+    }
+    .nav-links li:hover > .dropdown-menu,
+    .nav-links li.dropdown-open > .dropdown-menu {
+      opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease-out, visibility 0s linear 0s, transform 0.25s ease-out;
+    }
+    .dropdown-menu li { margin-left: 0; width: 100%; height: auto; }
+    .dropdown-menu a {
+      display: block; padding: 0.8rem 1.5rem; color: var(--text-secondary);
+      font-size: 0.95rem; white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+    .dropdown-menu a:hover { background-color: var(--primary-purple); color: var(--text-primary); padding-left: 1.8rem; transform: translateY(0); }
+    .dropdown-menu a.active { color: var(--text-primary); background-color: rgba(222, 90, 240, 0.2);}
+    .dropdown-menu a::after { display: none; }
+    .nav-burger { display: none; cursor: pointer; flex-direction: column; justify-content: space-around; width: 25px; height: 21px; background: transparent; border: none; padding: 0;}
+    .nav-burger div { width: 25px; height: 3px; background-color: var(--text-primary); transition: all 0.3s ease; border-radius: 1px; }
+
+    #main-content-wrapper {
+      min-height: calc(100vh - var(--nav-height));
+      padding: 3rem 1rem;
+      position: relative;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s;
+    }
+    #main-content-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+    .api-main-container { position: relative; z-index: 1; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+    .hero-section {
+      text-align: center;
+      padding: 5rem 0 4rem;
+      position: relative;
+    }
+    .hero-section .tool-name {
+      font-size: 4.2rem;
+      font-weight: 700; margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, var(--api-gradient-start), var(--api-gradient-end));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: -1.5px;
+      line-height: 1.2;
+    }
+    .hero-section .tool-tagline {
+      color: var(--text-secondary); font-size: 1.4rem;
+      margin-bottom: 3rem;
+      max-width: 850px; line-height: 1.75; margin-left: auto; margin-right: auto;
+    }
+
+    .section-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .section-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .benefits-section { margin-bottom: 5rem; padding: 2rem 0; }
+    .benefits-section h2 {
+      text-align: center; font-size: 2.5rem;
+      font-weight: 600; margin-bottom: 3rem; color: var(--text-primary);
+    }
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; }
+    .benefit-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2.5rem;
+      border-left: 5px solid var(--api-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(26, 188, 156, 0.1); }
+    .benefit-card i { font-size: 2.2rem; color: var(--api-color); margin-bottom: 1.2rem; display: block; }
+    .benefit-card h4 { font-size: 1.4rem; color: var(--text-primary); margin-bottom: 0.8rem; }
+    .benefit-card p { font-size: 1rem; color: var(--text-tertiary); line-height: 1.65; }
+
+    .features-box {
+      background: var(--card-bg); border-radius: 18px; padding: 3rem;
+      backdrop-filter: blur(12px); border: 1px solid rgba(26, 188, 156, 0.3);
+      border-top: 5px solid var(--api-color);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+      margin-bottom: 5rem;
+    }
+    .features-box h3 {
+      font-size: 2.1rem; margin-bottom: 2.5rem; color: var(--text-primary);
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .features-box h3 i { color: var(--api-color); font-size: 1.9rem; }
+    .features-list { list-style: none; }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 1.8rem; margin-bottom: 2rem;
+      padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .feature-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .feature-icon { color: var(--api-color); font-size: 1.8rem; margin-top: 0.1rem; width: 30px; text-align: center; }
+    .feature-text strong { font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary); font-size: 1.25rem; display: block;}
+    .feature-text span { color: var(--text-tertiary); font-size: 1.05rem; line-height: 1.65; }
+
+    .stats-container {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3.5rem;
+    }
+    .stat-card {
+      background: rgba(26, 188, 156, 0.12);
+      border-radius: 16px; padding: 2.5rem 2rem;
+      border: 1px solid rgba(26, 188, 156, 0.25);
+      border-left: 6px solid var(--api-color);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(26, 188, 156, 0.2);
+      background-color: rgba(26, 188, 156, 0.2);
+    }
+    .stat-value {
+      font-size: 3.2rem; font-weight: 700; color: var(--api-color); margin-bottom: 0.6rem;
+      min-height: 1.2em;
+      transition: opacity 0.5s ease-in;
+    }
+    .stat-label { color: var(--text-secondary); font-size: 1.05rem; font-weight: 500; }
+
+    .download-discord-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 1rem;
+      background: linear-gradient(45deg, var(--api-gradient-start), var(--api-gradient-end));
+      color: var(--api-text-on-accent);
+      padding: 1.1rem 2.8rem; border-radius: 50px; text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      border: none; cursor: pointer; font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+    }
+    .download-discord-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(26, 188, 156, 0.5);
+    }
+    .download-discord-btn i { font-size: 1.5rem; margin-right: 0.2rem; }
+
+    .documentation-section {
+      background: var(--card-bg); border-radius: 20px; padding: 3.5rem;
+      backdrop-filter: blur(15px); border: 1px solid rgba(26, 188, 156, 0.25);
+      margin-top: 5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    }
+    .docs-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
+    .docs-header i { color: var(--api-color); font-size: 2.8rem; }
+    .docs-header h2 {
+      font-size: 2.8rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--api-gradient-start), var(--api-gradient-end));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .setup-instructions {
+      background: rgba(10, 10, 10, 0.6);
+      border-radius: 16px;
+      padding: 3rem; margin-bottom: 3.5rem; border-left: 6px solid var(--api-color);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
+    }
+    .setup-instructions h3 { font-size: 1.8rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;}
+    .setup-instructions h3 i { color: var(--api-color); }
+    .setup-steps { list-style-type: none; counter-reset: step-counter; padding-left: 0; }
+    .setup-step { position: relative; padding-left: 4rem; margin-bottom: 1.8rem; line-height: 1.75; font-size: 1.1rem; }
+    .setup-step:before {
+      counter-increment: step-counter; content: counter(step-counter);
+      position: absolute; left: 0; top: -2px; background: var(--api-color); color: var(--api-text-on-accent);
+      width: 2.8rem; height: 2.8rem; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-weight: bold; font-size: 1.3rem;
+      box-shadow: 0 3px 8px rgba(26, 188, 156, 0.3);
+    }
+    .setup-step code { background: rgba(0,0,0,0.4); padding: 0.3em 0.6em; border-radius: 6px; color: var(--light-purple); font-size: 0.95em;}
+
+    .search-container { margin-bottom: 3rem; position: relative; }
+    .search-bar {
+      width: 100%; padding: 1.2rem 1.8rem; background: rgba(10, 10, 10, 0.7);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+      color: var(--text-primary); font-size: 1.15rem; padding-left: 4rem;
+      transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .search-bar:focus {
+      outline: none; border-color: var(--api-color);
+      background-color: rgba(10, 10, 10, 0.85);
+      box-shadow: 0 0 15px rgba(26, 188, 156, 0.2);
+    }
+    .search-icon { position: absolute; left: 1.8rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 1.3rem;}
+
+    .endpoint {
+      background: rgba(10, 10, 10, 0.5);
+      border-radius: 16px;
+      margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.08);
+      border-left: 6px solid var(--api-color); overflow: hidden;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .endpoint:hover { box-shadow: 0 8px 30px rgba(26, 188, 156, 0.12); border-color: rgba(26, 188, 156, 0.35); }
+
+    .endpoint-header {
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+    .endpoint-header:hover {
+      background: rgba(26, 188, 156, 0.1);
+    }
+    .endpoint-header:focus-visible {
+      outline: 2px solid var(--api-color);
+      outline-offset: 2px;
+      background: rgba(26, 188, 156, 0.05);
+    }
+
+    .endpoint-title { display: flex; align-items: center; gap: 1.2rem; }
+    .method {
+      padding: 0.6rem 1.1rem; border-radius: 8px; font-weight: 700;
+      font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.8px;
+      min-width: 80px; text-align:center;
+    }
+    .post { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.4); }
+    .get { background: rgba(52, 152, 219, 0.2); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.4); }
+
+    .path { font-family: 'SF Mono', Consolas, 'Courier New', monospace; color: var(--text-primary); font-size: 1.2rem; }
+    .toggle-icon { color: var(--text-secondary); transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); font-size: 1.4rem; }
+    .endpoint-content {
+      padding: 0 2rem; max-height: 0; overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), padding 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      background: rgba(10, 10, 10, 0.4);
+      border-top: 1px solid rgba(26, 188, 156, 0.15);
+    }
+    .endpoint.active .endpoint-content { padding: 2rem; max-height: 3500px; }
+    .endpoint.active .toggle-icon { transform: rotate(180deg); color: var(--api-color);}
+    .endpoint-description { color: var(--text-tertiary); margin-bottom: 2.2rem; line-height: 1.75; font-size: 1.05rem; }
+    .endpoint-content h4 {
+      font-size: 1.3rem; color: var(--text-primary);
+      margin: 2.5rem 0 1.5rem 0; border-bottom: 1px solid rgba(26, 188, 156, 0.3);
+      padding-bottom: 0.8rem; font-weight:600;
+    }
+    .params-table { width: 100%; border-collapse: collapse; margin-bottom: 2.2rem; font-size: 1rem; }
+    .params-table th {
+      text-align: left; padding: 1.1rem; background: rgba(26, 188, 156, 0.2);
+      color: var(--text-primary); font-weight: 600; border-bottom: 2px solid var(--api-color);
+    }
+    .params-table td { padding: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); }
+    .params-table code { background: rgba(0,0,0,0.4); padding: 0.25em 0.5em; border-radius: 5px; color: var(--light-purple); }
+    .param-required { color: #e74c3c; font-size: 0.9rem; margin-left: 0.5rem; font-weight: 500;}
+
+    .example-request {
+      background: #0B0B0B;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 2rem;
+      font-family: 'SF Mono', Consolas, 'Courier New', monospace; font-size: 0.95rem; line-height: 1.75;
+      color: #e8e8e8; margin-top: 1.5rem; position: relative; overflow-x: auto;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .example-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .example-title { color: var(--api-color); font-weight: 600; font-size: 1.1rem;}
+    .copy-btn {
+      background: rgba(26, 188, 156, 0.3); border: 1px solid rgba(26, 188, 156, 0.5);
+      color: var(--api-text-on-accent); padding: 0.6rem 1.1rem; border-radius: 8px;
+      cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-weight: 500;
+    }
+    .copy-btn:hover { background: var(--api-color); color: var(--dark-bg); }
+    .copy-btn.copied { background: var(--api-gradient-end); color: var(--dark-bg); }
+    .copy-btn i { margin-right: 0.5em; }
+
+    .tab-buttons {
+      display: flex; gap: 0.8rem; margin-bottom: 1.8rem;
+      border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 1rem;
+    }
+    .tab-btn {
+      background: transparent; border:none; border-bottom: 3px solid transparent;
+      color: var(--text-secondary); padding: 0.7rem 0.3rem; margin-right:1.8rem;
+      cursor: pointer; font-size: 1.05rem; transition: all 0.2s ease-in-out; font-weight: 500;
+    }
+    .tab-btn.active, .tab-btn[aria-selected="true"] {
+      color: var(--api-color); border-bottom-color: var(--api-color); font-weight:600;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .tab-content code, .tab-content pre { white-space: pre-wrap; word-wrap: break-word; }
+
+    #back-to-top {
+      position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+      background: linear-gradient(45deg, var(--api-gradient-start), var(--api-gradient-end));
+      color: var(--api-text-on-accent); border: none; border-radius: 50%;
+      font-size: 1.5rem; display: none; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 999; box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    }
+    #back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 20px rgba(26, 188, 156, 0.5); }
+    #back-to-top.visible { display: flex; }
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 1.5rem; }
+      .nav-burger { display: flex; }
+      .nav-links {
+        position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(10px); display: flex; flex-direction: column;
+        align-items: stretch; width: 70%; transform: translateX(100%);
+        transition: transform 0.5s ease-in-out; padding-top: 1rem; overflow-y: auto;
+      }
+      .nav-links li { opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: stretch; height: auto; }
+      .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
+      .nav-links li > a:hover { transform: none; }
+      .dropdown-menu {
+        opacity: 0; visibility: hidden; max-height: 0; overflow: hidden;
+        position: static; transform: none; width: 100%; box-shadow: none;
+        border-radius: 0; margin-top: 0; padding: 0;
+        background-color: rgba(10, 10, 10, 0.3);
+        transition: opacity 0.3s ease, max-height 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .nav-links li.dropdown-open > .dropdown-menu {
+        opacity: 1; visibility: visible; max-height: 400px; padding-left: 1.5rem;
+        transition-delay: 0s, 0s, 0s, 0s;
+      }
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+
+      .nav-active { transform: translateX(0%); }
+      @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
+      .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+      .toggle .line2 { opacity: 0; }
+      .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+      .hero-section { padding: 3rem 0 2.5rem; }
+      .hero-section .tool-name { font-size: 3rem; }
+      .hero-section .tool-tagline { font-size: 1.2rem; }
+      .benefits-section h2 {font-size: 2rem;}
+      .features-box, .documentation-section { padding: 2.5rem 1.5rem; }
+      .docs-header h2, .features-box h3 { font-size: 2.2rem; }
+    }
+    @media (max-width: 480px) {
+      .nav-links { width: 80%; }
+      .endpoint-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;}
+      .params-table { display: block; overflow-x: auto; }
+      .path {font-size: 1rem;}
+      .stat-card {padding: 2rem 1.5rem;}
+      .stat-value {font-size: 2.5rem;}
+      .tab-buttons { flex-wrap: wrap; justify-content: center; }
+      .tab-btn { margin-right: 0.8rem; margin-bottom: 0.8rem;}
+      .docs-header {flex-direction: column; align-items: center; text-align: center; gap: 1rem;}
+      .docs-header h2, .features-box h3, .hero-section .tool-name {font-size: 2.5rem;}
+      .hero-section .tool-tagline {font-size: 1.1rem;}
+      #back-to-top { width: 45px; height: 45px; font-size: 1.3rem; bottom: 25px; right: 25px;}
+    }
+  </style>
+</head>
+<body class="api-wrapper-page">
+  <a href="#api-main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <a href="/index.html"><img src="/media/logo.png" alt="Go6 Logo" id="navbar-logo"></a>
+    </div>
+    <ul class="nav-links" id="nav-links-main">
+      <li><a href="/index.html" id="nav-home">Home</a></li>
+      <li><a href="/about.html" id="nav-about">About Us</a></li>
+      <li class="nav-item-dropdown">
+        <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
+          Projects <i class="fas fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav-projects">
+          <li><a href="/g06.html">G06 Raider</a></li>
+          <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
+          <li><a href="/exchange-server.html">GO6 Exchange Server</a></li>
+        </ul>
+      </li>
+      <li><a href="/store.html" id="nav-store">Store</a></li>
+      <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
+    </ul>
+    <button class="nav-burger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-main">
+        <div class="line1"></div> <div class="line2"></div> <div class="line3"></div>
+    </button>
+  </nav>
+
+  <div id="main-content-wrapper">
+    <div class="api-page-blob-1"></div>
+    <div class="api-page-blob-2"></div>
+
+    <main class="api-main-container" id="api-main-content">
+      <section class="hero-section">
+        <h1 class="tool-name">GO6 API Wrapper</h1>
+        <p class="tool-tagline">Self-hosted Discord API wrapper that runs locally for instant performance. Secure your tokens and interact with Discord's API like never before.</p>
+        <a href="https://discord.gg/g06" class="download-discord-btn" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-rocket"></i> Download & Get Started
+        </a>
+      </section>
+
+      <section class="benefits-section">
+        <h2>Why GO6 API Wrapper?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fas fa-tachometer-alt"></i>
+                <h4>Blazing Speed</h4>
+                <p>Execute Discord actions with 1-5ms response times by running the API on your local machine.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-user-shield"></i>
+                <h4>Ultimate Privacy</h4>
+                <p>Your Discord tokens and data remain entirely on your system, never passing through third-party servers.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-cogs"></i>
+                <h4>Simplified Workflow</h4>
+                <p>Easy setup with a single executable and straightforward HTTP endpoints for all your needs.</p>
+            </div>
+        </div>
+      </section>
+
+      <div class="features-box">
+        <h3><i class="fas fa-star"></i> Core Capabilities</h3>
+        <ul class="features-list">
+          <li class="feature-item">
+            <i class="fas fa-bolt feature-icon"></i>
+            <div class="feature-text">
+              <strong>Instant Performance</strong>
+              <span>Runs locally on your machine with near-zero latency (1-5ms response times)</span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-shield-halved feature-icon"></i>
+            <div class="feature-text">
+              <strong>Robust Proxy Support</strong>
+              <span>Built-in proxy rotation with format: <code>ip:port:user:pass</code> or <code>ip:port</code></span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-plug feature-icon"></i>
+            <div class="feature-text">
+              <strong>Effortless Setup</strong>
+              <span>Single executable that automatically hosts the Flask API on your local network</span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-lock feature-icon"></i>
+            <div class="feature-text">
+              <strong>Private & Secure by Design</strong>
+              <span>Your tokens never leave your local machine - no external servers involved, ever.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-value">1-5ms</div>
+            <div class="stat-label">Avg. Response Time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Local</div>
+            <div class="stat-label">Deployment</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Uncapped</div>
+            <div class="stat-label">API Requests</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="documentation-section">
+        <div class="docs-header">
+          <i class="fas fa-book-open"></i>
+          <h2>API Reference</h2>
+        </div>
+
+        <div class="setup-instructions">
+          <h3><i class="fas fa-rocket"></i> Quick Start Guide</h3>
+          <ol class="setup-steps">
+            <li class="setup-step">Download the GO6 API Wrapper executable from our Discord server.</li>
+            <li class="setup-step">Run the executable. It will automatically start the local API server (typically on port 5000).</li>
+            <li class="setup-step">The API will be available at <code>http://localhost:5000/</code> or your machine's local IP.</li>
+            <li class="setup-step">Begin making requests to the documented endpoints below using your preferred language or tool.</li>
+          </ol>
+        </div>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-bar" placeholder="Search endpoints (e.g., /join, message, POST)..." id="endpointSearch" aria-label="Search API Endpoints">
+        </div>
+
+        <div class="endpoint active" id="endpoint-join">
+          <button class="endpoint-header" aria-expanded="true" aria-controls="endpoint-content-join" id="endpoint-header-join">
+            <span class="endpoint-title">
+              <span class="method post">POST</span>
+              <span class="path">/join</span>
+            </span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          </button>
+          <div class="endpoint-content" role="region" aria-labelledby="endpoint-header-join" id="endpoint-content-join">
+            <p class="endpoint-description">
+              Join a Discord server using an invite code with the specified token. Proxies are automatically rotated if multiple are configured.
+            </p>
+            <h4>Request Body (JSON)</h4>
+            <table class="params-table">
+              <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>token <span class="param-required">*</span></td><td>string</td><td>Discord account token.</td></tr>
+                <tr><td>invite <span class="param-required">*</span></td><td>string</td><td>Discord invite code (e.g., "discord").</td></tr>
+                <tr><td>proxy <span class="param-required">*</span></td><td>string</td><td>Proxy (<code>ip:port:user:pass</code> or <code>ip:port</code>).</td></tr>
+              </tbody>
+            </table>
+            <h4>Example Request</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Request Examples for /join endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="curl-join" id="tab-curl-join" data-target="curl-join">cURL</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="js-join" id="tab-js-join" data-target="js-join">JavaScript</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="python-join" id="tab-python-join" data-target="python-join">Python</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">Local API Call</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-curl-join" id="curl-join"><code>curl -X POST "http://localhost:5000/join" \
+-H "Content-Type: application/json" \
+-d '{
+  "token": "YOUR_DISCORD_TOKEN",
+  "invite": "TARGET_INVITE_CODE",
+  "proxy": "ip:port:user:pass"
+}'</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-js-join" id="js-join"><code>fetch('http://localhost:5000/join', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    token: 'YOUR_DISCORD_TOKEN',
+    invite: 'TARGET_INVITE_CODE',
+    proxy: 'ip:port:user:pass'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-python-join" id="python-join"><code>import requests
+
+payload = {
+  "token": "YOUR_DISCORD_TOKEN",
+  "invite": "TARGET_INVITE_CODE",
+  "proxy": "ip:port:user:pass"
+}
+response = requests.post("http://localhost:5000/join", json=payload)
+print(response.json())</code></pre>
+            </div>
+            <h4>Example Responses</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Response Examples for /join endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="success-join-resp" id="tab-success-join-resp" data-target="success-join-resp">Success (200)</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="error-join-resp" id="tab-error-join-resp" data-target="error-join-resp">Error</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">JSON Response</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-success-join-resp" id="success-join-resp"><code>{
+  "status": "success",
+  "message": "Successfully joined server.",
+  "server_id": "123456789012345678",
+  "response_time": "3ms"
+}</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-error-join-resp" id="error-join-resp"><code>{
+  "status": "error",
+  "code": "INVALID_TOKEN_OR_INVITE",
+  "message": "Failed to join. Token might be invalid or invite expired.",
+  "response_time": "1ms"
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint" id="endpoint-message">
+          <button class="endpoint-header" aria-expanded="false" aria-controls="endpoint-content-message" id="endpoint-header-message">
+            <span class="endpoint-title">
+              <span class="method post">POST</span>
+              <span class="path">/message</span>
+            </span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          </button>
+          <div class="endpoint-content" role="region" aria-labelledby="endpoint-header-message" id="endpoint-content-message">
+            <p class="endpoint-description">Send a message to a specified Discord channel using a token.</p>
+            <h4>Request Body (JSON)</h4>
+            <table class="params-table">
+              <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>token <span class="param-required">*</span></td><td>string</td><td>Discord account token.</td></tr>
+                <tr><td>channel_id <span class="param-required">*</span></td><td>string</td><td>ID of the target channel.</td></tr>
+                <tr><td>content <span class="param-required">*</span></td><td>string</td><td>The message content to send.</td></tr>
+                <tr><td>proxy <span class="param-required">*</span></td><td>string</td><td>Proxy (<code>ip:port:user:pass</code> or <code>ip:port</code>).</td></tr>
+              </tbody>
+            </table>
+            <h4>Example Request</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Request Examples for /message endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="curl-message" id="tab-curl-message" data-target="curl-message">cURL</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="js-message" id="tab-js-message" data-target="js-message">JavaScript</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="python-message" id="tab-python-message" data-target="python-message">Python</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">Local API Call</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-curl-message" id="curl-message"><code>curl -X POST "http://localhost:5000/message" \
+-H "Content-Type: application/json" \
+-d '{
+  "token": "YOUR_DISCORD_TOKEN",
+  "channel_id": "TARGET_CHANNEL_ID",
+  "content": "Hello from Go6 API Wrapper!",
+  "proxy": "ip:port:user:pass"
+}'</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-js-message" id="js-message"><code>fetch('http://localhost:5000/message', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    token: 'YOUR_DISCORD_TOKEN',
+    channel_id: 'TARGET_CHANNEL_ID',
+    content: 'Hello from GO6 API Wrapper!',
+    proxy: 'ip:port:user:pass'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-python-message" id="python-message"><code>import requests
+
+payload = {
+  "token": "YOUR_DISCORD_TOKEN",
+  "channel_id": "TARGET_CHANNEL_ID",
+  "content": "Hello from GO6 API Wrapper!",
+  "proxy": "ip:port:user:pass"
+}
+response = requests.post("http://localhost:5000/message", json=payload)
+print(response.json())</code></pre>
+            </div>
+            <h4>Example Responses</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Response Examples for /message endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="success-message-resp" id="tab-success-message-resp" data-target="success-message-resp">Success (200)</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="error-message-resp" id="tab-error-message-resp" data-target="error-message-resp">Error</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">JSON Response</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-success-message-resp" id="success-message-resp"><code>{
+  "status": "success",
+  "message": "Message sent successfully.",
+  "message_id": "987654321098765432",
+  "response_time": "2ms"
+}</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-error-message-resp" id="error-message-resp"><code>{
+  "status": "error",
+  "code": "CHANNEL_NOT_FOUND_OR_NO_PERMS",
+  "message": "Failed to send message. Channel not found or insufficient permissions.",
+  "response_time": "1ms"
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <button id="back-to-top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+    const mainNav = document.querySelector('.main-nav');
+    const body = document.body;
+
+    // Initialize Lenis for smooth scrolling
+    let lenis;
+    if (window.Lenis) {
+        lenis = new Lenis({
+            duration: 1.3, // Example duration
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Example easing
+            // You can add other Lenis options here if needed, similar to your home page
+            // e.g., smoothWheel: true, wheelMultiplier: 0.8, etc.
+            // If no specific options, these defaults or the ones above will apply.
+        });
+
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GO6 - API Wrapper</title>
+  <meta name="description" content="Self-hosted Discord API wrapper by GO6, offering instant performance and local security for your Discord tokens and operations.">
+  <link rel="icon" href="/media/greengo6.png" type="image/png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://g06.lol/api-wrapper.html">
+  <meta property="og:title" content="GO6 API Wrapper - Go6 Projects">
+  <meta property="og:description" content="Explore the Go6 Discord API Wrapper, a locally hosted solution for high-performance Discord interactions.">
+  <meta property="og:image" content="https://g06.lol/media/go6_api_preview.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://g06.lol/api-wrapper.html">
+  <meta property="twitter:title" content="GO6 API Wrapper - Go6 Projects">
+  <meta property="twitter:description" content="Explore the Go6 Discord API Wrapper, a locally hosted solution for high-performance Discord interactions.">
+  <meta property="twitter:image" content="https://g06.lol/media/go6_api_preview.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    html {
+      scroll-behavior: smooth; /* Fallback for browsers where JS might fail or for non-Lenis elements */
+      overflow: hidden; /* Hide native HTML scrollbar, as per home page guide */
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    :root {
+      --primary-purple: #de5af0;
+      --light-purple: #a78bfa;
+      --discord-blue: #5865F2;
+      --dark-bg: #0a0a0a;
+      --medium-bg: #141414;
+      --card-bg: rgba(22, 22, 22, 0.85);
+      --text-primary: #fff;
+      --text-secondary: #b0b0b0;
+      --text-tertiary: #888;
+      --nav-height: 70px;
+
+      --api-color: #1abc9c;
+      --api-gradient-start: #1dddb2;
+      --api-gradient-end: #2ecc71;
+      --api-accent-dark: #16a085;
+      --api-text-on-accent: #ffffff;
+    }
+
+    .skip-link {
+      position: absolute; top: -100px; left: 0;
+      background: var(--primary-purple); color: white;
+      padding: 8px 12px; z-index: 10001; /* Ensure skip link is above nav if it ever overlaps during focus */
+      text-decoration: none;
+      transition: top 0.3s ease-in-out, background-color 0.3s ease, color 0.3s ease;
+      border-radius: 0 0 5px 0;
+    }
+    .skip-link:focus { top: 0; }
+
+    body {
+      background-color: var(--dark-bg); color: var(--text-primary);
+      min-height: 100vh; position: relative; padding-top: 0;
+      overflow: hidden; /* Hide native body scrollbar, as per home page guide */
+    }
+
+    body.content-visible { padding-top: var(--nav-height); }
+
+    body.api-wrapper-page .skip-link {
+      background: var(--api-color);
+      color: var(--api-text-on-accent);
+    }
+
+    body.api-wrapper-page .main-nav .nav-links > li > a::after {
+      background-color: var(--api-color);
+    }
+
+    body.api-wrapper-page .main-nav .nav-links > li > a:hover,
+    body.api-wrapper-page .main-nav .nav-links > li > a.active {
+      color: var(--api-color);
+    }
+
+    body.api-wrapper-page .main-nav #nav-projects.active {
+      color: var(--api-color) !important;
+    }
+
+    body.api-wrapper-page .main-nav #nav-projects:hover {
+      color: var(--api-color);
+    }
+
+    body.api-wrapper-page .dropdown-menu a:hover {
+      background-color: var(--api-color) !important;
+      color: var(--api-text-on-accent) !important;
+    }
+    body.api-wrapper-page .dropdown-menu a.active {
+      color: var(--api-color) !important;
+      background-color: rgba(26, 188, 156, 0.15) !important;
+    }
+
+    .api-page-blob-1, .api-page-blob-2 {
+      position: fixed;
+      border-radius: 50%;
+      opacity: 0.25;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .api-page-blob-1 {
+      width: 500px; height: 500px; background: var(--api-color);
+      filter: blur(130px);
+      top: 0%; left: -250px; animation: slowDrift1 28s infinite alternate ease-in-out;
+    }
+    .api-page-blob-2 {
+      width: 600px; height: 600px; background: var(--api-gradient-end);
+      filter: blur(140px);
+      bottom: -5%; right: -300px; animation: slowDrift2 32s infinite alternate ease-in-out;
+    }
+    @keyframes slowDrift1 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(50px, -40px) scale(1.15) rotate(20deg); }
+      100% { transform: translate(-30px, 30px) scale(0.95) rotate(-15deg); }
+    }
+    @keyframes slowDrift2 {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(-45px, 35px) scale(1.1) rotate(-18deg); }
+      100% { transform: translate(25px, -25px) scale(0.9) rotate(12deg); }
+    }
+
+    .main-nav {
+      display: none; justify-content: space-between; align-items: center;
+      width: 100%; height: var(--nav-height); padding: 0 2rem;
+      position: fixed; top: 0; left: 0; z-index: 1000;
+      background-color: rgba(10, 10, 10, 0.45);
+      backdrop-filter: blur(12px);
+      transition: background-color 0.3s ease, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
+    }
+    .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
+    .nav-logo a { display: flex; align-items: center; height: 100%; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; }
+    .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
+    .nav-links li { position: relative; margin-left: 2.5rem; display: flex; align-items: center; height: 100%; }
+    .nav-links a {
+      color: var(--text-secondary); text-decoration: none; font-size: 1rem; font-weight: 500;
+      transition: color 0.3s ease, transform 0.3s ease; position: relative; padding: 0.3rem 0;
+      display: flex; align-items: center;
+    }
+    .nav-links a .fa-caret-down { margin-left: 0.4rem; transition: transform 0.3s ease; }
+    .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
+    .nav-links a::after {
+      content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
+      transform: translateX(-50%); background-color: var(--primary-purple);
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--text-primary); }
+    .nav-links li > a:hover { transform: translateY(-2px); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .dropdown-menu {
+      opacity: 0; visibility: hidden; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+      border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
+      list-style: none; box-shadow: 0 8px 25px rgba(0,0,0,0.35); margin-top: 5px;
+      transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
+    }
+    .nav-links li:hover > .dropdown-menu,
+    .nav-links li.dropdown-open > .dropdown-menu {
+      opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0);
+      transition: opacity 0.25s ease-out, visibility 0s linear 0s, transform 0.25s ease-out;
+    }
+    .dropdown-menu li { margin-left: 0; width: 100%; height: auto; }
+    .dropdown-menu a {
+      display: block; padding: 0.8rem 1.5rem; color: var(--text-secondary);
+      font-size: 0.95rem; white-space: nowrap;
+      transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
+    }
+    .dropdown-menu a:hover { background-color: var(--primary-purple); color: var(--text-primary); padding-left: 1.8rem; transform: translateY(0); }
+    .dropdown-menu a.active { color: var(--text-primary); background-color: rgba(222, 90, 240, 0.2);}
+    .dropdown-menu a::after { display: none; }
+    .nav-burger { display: none; cursor: pointer; flex-direction: column; justify-content: space-around; width: 25px; height: 21px; background: transparent; border: none; padding: 0;}
+    .nav-burger div { width: 25px; height: 3px; background-color: var(--text-primary); transition: all 0.3s ease; border-radius: 1px; }
+
+    #main-content-wrapper {
+      min-height: calc(100vh - var(--nav-height)); /* Ensures content can fill viewport height under fixed nav */
+      /* Lenis will handle scrolling for the entire document, so this wrapper doesn't need its own overflow properties */
+      padding: 3rem 1rem;
+      position: relative;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: opacity 0.6s ease-out 0.1s, transform 0.6s ease-out 0.1s;
+    }
+    #main-content-wrapper.visible { opacity: 1; transform: translateY(0); }
+
+    .api-main-container { position: relative; z-index: 1; max-width: 1200px; width: 100%; margin: 0 auto; }
+
+    .hero-section {
+      text-align: center;
+      padding: 5rem 0 4rem;
+      position: relative;
+    }
+    .hero-section .tool-name {
+      font-size: 4.2rem;
+      font-weight: 700; margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, var(--api-gradient-start), var(--api-gradient-end));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: -1.5px;
+      line-height: 1.2;
+    }
+    .hero-section .tool-tagline {
+      color: var(--text-secondary); font-size: 1.4rem;
+      margin-bottom: 3rem;
+      max-width: 850px; line-height: 1.75; margin-left: auto; margin-right: auto;
+    }
+
+    .section-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .section-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .benefits-section { margin-bottom: 5rem; padding: 2rem 0; }
+    .benefits-section h2 {
+      text-align: center; font-size: 2.5rem;
+      font-weight: 600; margin-bottom: 3rem; color: var(--text-primary);
+    }
+    .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; }
+    .benefit-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2.5rem;
+      border-left: 5px solid var(--api-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(26, 188, 156, 0.1); }
+    .benefit-card i { font-size: 2.2rem; color: var(--api-color); margin-bottom: 1.2rem; display: block; }
+    .benefit-card h4 { font-size: 1.4rem; color: var(--text-primary); margin-bottom: 0.8rem; }
+    .benefit-card p { font-size: 1rem; color: var(--text-tertiary); line-height: 1.65; }
+
+    .features-box {
+      background: var(--card-bg); border-radius: 18px; padding: 3rem;
+      backdrop-filter: blur(12px); border: 1px solid rgba(26, 188, 156, 0.3);
+      border-top: 5px solid var(--api-color);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.3);
+      margin-bottom: 5rem;
+    }
+    .features-box h3 {
+      font-size: 2.1rem; margin-bottom: 2.5rem; color: var(--text-primary);
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .features-box h3 i { color: var(--api-color); font-size: 1.9rem; }
+    .features-list { list-style: none; }
+    .feature-item {
+      display: flex; align-items: flex-start; gap: 1.8rem; margin-bottom: 2rem;
+      padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .feature-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .feature-icon { color: var(--api-color); font-size: 1.8rem; margin-top: 0.1rem; width: 30px; text-align: center; }
+    .feature-text strong { font-weight: 600; margin-bottom: 0.6rem; color: var(--text-primary); font-size: 1.25rem; display: block;}
+    .feature-text span { color: var(--text-tertiary); font-size: 1.05rem; line-height: 1.65; }
+
+    .stats-container {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3.5rem;
+    }
+    .stat-card {
+      background: rgba(26, 188, 156, 0.12);
+      border-radius: 16px; padding: 2.5rem 2rem;
+      border: 1px solid rgba(26, 188, 156, 0.25);
+      border-left: 6px solid var(--api-color);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 12px 30px rgba(26, 188, 156, 0.2);
+      background-color: rgba(26, 188, 156, 0.2);
+    }
+    .stat-value {
+      font-size: 3.2rem; font-weight: 700; color: var(--api-color); margin-bottom: 0.6rem;
+      min-height: 1.2em;
+      transition: opacity 0.5s ease-in;
+    }
+    .stat-label { color: var(--text-secondary); font-size: 1.05rem; font-weight: 500; }
+
+    .download-discord-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 1rem;
+      background: linear-gradient(45deg, var(--api-gradient-start), var(--api-gradient-end));
+      color: var(--api-text-on-accent);
+      padding: 1.1rem 2.8rem; border-radius: 50px; text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      border: none; cursor: pointer; font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(26, 188, 156, 0.4);
+    }
+    .download-discord-btn:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 15px 35px rgba(26, 188, 156, 0.5);
+    }
+    .download-discord-btn i { font-size: 1.5rem; margin-right: 0.2rem; }
+
+    .documentation-section {
+      background: var(--card-bg); border-radius: 20px; padding: 3.5rem;
+      backdrop-filter: blur(15px); border: 1px solid rgba(26, 188, 156, 0.25);
+      margin-top: 5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    }
+    .docs-header { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem; }
+    .docs-header i { color: var(--api-color); font-size: 2.8rem; }
+    .docs-header h2 {
+      font-size: 2.8rem; font-weight: 700;
+      background: linear-gradient(90deg, var(--api-gradient-start), var(--api-gradient-end));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .setup-instructions {
+      background: rgba(10, 10, 10, 0.6);
+      border-radius: 16px;
+      padding: 3rem; margin-bottom: 3.5rem; border-left: 6px solid var(--api-color);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
+    }
+    .setup-instructions h3 { font-size: 1.8rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem;}
+    .setup-instructions h3 i { color: var(--api-color); }
+    .setup-steps { list-style-type: none; counter-reset: step-counter; padding-left: 0; }
+    .setup-step { position: relative; padding-left: 4rem; margin-bottom: 1.8rem; line-height: 1.75; font-size: 1.1rem; }
+    .setup-step:before {
+      counter-increment: step-counter; content: counter(step-counter);
+      position: absolute; left: 0; top: -2px; background: var(--api-color); color: var(--api-text-on-accent);
+      width: 2.8rem; height: 2.8rem; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-weight: bold; font-size: 1.3rem;
+      box-shadow: 0 3px 8px rgba(26, 188, 156, 0.3);
+    }
+    .setup-step code { background: rgba(0,0,0,0.4); padding: 0.3em 0.6em; border-radius: 6px; color: var(--light-purple); font-size: 0.95em;}
+
+    .search-container { margin-bottom: 3rem; position: relative; }
+    .search-bar {
+      width: 100%; padding: 1.2rem 1.8rem; background: rgba(10, 10, 10, 0.7);
+      border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;
+      color: var(--text-primary); font-size: 1.15rem; padding-left: 4rem;
+      transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .search-bar:focus {
+      outline: none; border-color: var(--api-color);
+      background-color: rgba(10, 10, 10, 0.85);
+      box-shadow: 0 0 15px rgba(26, 188, 156, 0.2);
+    }
+    .search-icon { position: absolute; left: 1.8rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 1.3rem;}
+
+    .endpoint {
+      background: rgba(10, 10, 10, 0.5);
+      border-radius: 16px;
+      margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.08);
+      border-left: 6px solid var(--api-color); overflow: hidden;
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .endpoint:hover { box-shadow: 0 8px 30px rgba(26, 188, 156, 0.12); border-color: rgba(26, 188, 156, 0.35); }
+
+    .endpoint-header {
+      background-color: transparent;
+      border: none;
+      color: inherit;
+      font-family: inherit;
+      font-size: inherit;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2rem;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+    }
+    .endpoint-header:hover {
+      background: rgba(26, 188, 156, 0.1);
+    }
+    .endpoint-header:focus-visible {
+      outline: 2px solid var(--api-color);
+      outline-offset: 2px;
+      background: rgba(26, 188, 156, 0.05);
+    }
+
+    .endpoint-title { display: flex; align-items: center; gap: 1.2rem; }
+    .method {
+      padding: 0.6rem 1.1rem; border-radius: 8px; font-weight: 700;
+      font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.8px;
+      min-width: 80px; text-align:center;
+    }
+    .post { background: rgba(46, 204, 113, 0.2); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.4); }
+    .get { background: rgba(52, 152, 219, 0.2); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.4); }
+
+    .path { font-family: 'SF Mono', Consolas, 'Courier New', monospace; color: var(--text-primary); font-size: 1.2rem; }
+    .toggle-icon { color: var(--text-secondary); transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); font-size: 1.4rem; }
+    .endpoint-content {
+      padding: 0 2rem; max-height: 0; overflow: hidden;
+      transition: max-height 0.5s cubic-bezier(0.25, 0.1, 0.25, 1), padding 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      background: rgba(10, 10, 10, 0.4);
+      border-top: 1px solid rgba(26, 188, 156, 0.15);
+    }
+    .endpoint.active .endpoint-content { padding: 2rem; max-height: 3500px; }
+    .endpoint.active .toggle-icon { transform: rotate(180deg); color: var(--api-color);}
+    .endpoint-description { color: var(--text-tertiary); margin-bottom: 2.2rem; line-height: 1.75; font-size: 1.05rem; }
+    .endpoint-content h4 {
+      font-size: 1.3rem; color: var(--text-primary);
+      margin: 2.5rem 0 1.5rem 0; border-bottom: 1px solid rgba(26, 188, 156, 0.3);
+      padding-bottom: 0.8rem; font-weight:600;
+    }
+    .params-table { width: 100%; border-collapse: collapse; margin-bottom: 2.2rem; font-size: 1rem; }
+    .params-table th {
+      text-align: left; padding: 1.1rem; background: rgba(26, 188, 156, 0.2);
+      color: var(--text-primary); font-weight: 600; border-bottom: 2px solid var(--api-color);
+    }
+    .params-table td { padding: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); }
+    .params-table code { background: rgba(0,0,0,0.4); padding: 0.25em 0.5em; border-radius: 5px; color: var(--light-purple); }
+    .param-required { color: #e74c3c; font-size: 0.9rem; margin-left: 0.5rem; font-weight: 500;}
+
+    .example-request {
+      background: #0B0B0B;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px; padding: 2rem;
+      font-family: 'SF Mono', Consolas, 'Courier New', monospace; font-size: 0.95rem; line-height: 1.75;
+      color: #e8e8e8; margin-top: 1.5rem; position: relative; overflow-x: auto;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .example-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .example-title { color: var(--api-color); font-weight: 600; font-size: 1.1rem;}
+    .copy-btn {
+      background: rgba(26, 188, 156, 0.3); border: 1px solid rgba(26, 188, 156, 0.5);
+      color: var(--api-text-on-accent); padding: 0.6rem 1.1rem; border-radius: 8px;
+      cursor: pointer; font-size: 0.9rem; transition: all 0.2s; font-weight: 500;
+    }
+    .copy-btn:hover { background: var(--api-color); color: var(--dark-bg); }
+    .copy-btn.copied { background: var(--api-gradient-end); color: var(--dark-bg); }
+    .copy-btn i { margin-right: 0.5em; }
+
+    .tab-buttons {
+      display: flex; gap: 0.8rem; margin-bottom: 1.8rem;
+      border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 1rem;
+    }
+    .tab-btn {
+      background: transparent; border:none; border-bottom: 3px solid transparent;
+      color: var(--text-secondary); padding: 0.7rem 0.3rem; margin-right:1.8rem;
+      cursor: pointer; font-size: 1.05rem; transition: all 0.2s ease-in-out; font-weight: 500;
+    }
+    .tab-btn.active, .tab-btn[aria-selected="true"] {
+      color: var(--api-color); border-bottom-color: var(--api-color); font-weight:600;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .tab-content code, .tab-content pre { white-space: pre-wrap; word-wrap: break-word; }
+
+    #back-to-top {
+      position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
+      background: linear-gradient(45deg, var(--api-gradient-start), var(--api-gradient-end));
+      color: var(--api-text-on-accent); border: none; border-radius: 50%;
+      font-size: 1.5rem; display: none; align-items: center; justify-content: center;
+      cursor: pointer; z-index: 999; box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+      transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+    }
+    #back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 20px rgba(26, 188, 156, 0.5); }
+    #back-to-top.visible { display: flex; }
+
+    @media (max-width: 768px) {
+      .main-nav { padding: 0 1.5rem; }
+      .nav-burger { display: flex; }
+      .nav-links {
+        position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(10px); display: flex; flex-direction: column;
+        align-items: stretch; width: 70%; transform: translateX(100%);
+        transition: transform 0.5s ease-in-out; padding-top: 1rem; overflow-y: auto;
+      }
+      .nav-links li { opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: stretch; height: auto; }
+      .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
+      .nav-links li > a:hover { transform: none; }
+      .dropdown-menu {
+        opacity: 0; visibility: hidden; max-height: 0; overflow: hidden;
+        position: static; transform: none; width: 100%; box-shadow: none;
+        border-radius: 0; margin-top: 0; padding: 0;
+        background-color: rgba(10, 10, 10, 0.3);
+        transition: opacity 0.3s ease, max-height 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .nav-links li.dropdown-open > .dropdown-menu {
+        opacity: 1; visibility: visible; max-height: 400px; padding-left: 1.5rem;
+        transition-delay: 0s, 0s, 0s, 0s;
+      }
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+
+      .nav-active { transform: translateX(0%); }
+      @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
+      .toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+      .toggle .line2 { opacity: 0; }
+      .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+      .hero-section { padding: 3rem 0 2.5rem; }
+      .hero-section .tool-name { font-size: 3rem; }
+      .hero-section .tool-tagline { font-size: 1.2rem; }
+      .benefits-section h2 {font-size: 2rem;}
+      .features-box, .documentation-section { padding: 2.5rem 1.5rem; }
+      .docs-header h2, .features-box h3 { font-size: 2.2rem; }
+    }
+    @media (max-width: 480px) {
+      .nav-links { width: 80%; }
+      .endpoint-header { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 1.5rem;}
+      .params-table { display: block; overflow-x: auto; }
+      .path {font-size: 1rem;}
+      .stat-card {padding: 2rem 1.5rem;}
+      .stat-value {font-size: 2.5rem;}
+      .tab-buttons { flex-wrap: wrap; justify-content: center; }
+      .tab-btn { margin-right: 0.8rem; margin-bottom: 0.8rem;}
+      .docs-header {flex-direction: column; align-items: center; text-align: center; gap: 1rem;}
+      .docs-header h2, .features-box h3, .hero-section .tool-name {font-size: 2.5rem;}
+      .hero-section .tool-tagline {font-size: 1.1rem;}
+      #back-to-top { width: 45px; height: 45px; font-size: 1.3rem; bottom: 25px; right: 25px;}
+    }
+  </style>
+</head>
+<body class="api-wrapper-page">
+  <a href="#api-main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="main-nav">
+    <div class="nav-logo">
+      <a href="/index.html"><img src="/media/logo.png" alt="Go6 Logo" id="navbar-logo"></a>
+    </div>
+    <ul class="nav-links" id="nav-links-main">
+      <li><a href="/index.html" id="nav-home">Home</a></li>
+      <li><a href="/about.html" id="nav-about">About Us</a></li>
+      <li class="nav-item-dropdown">
+        <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
+          Projects <i class="fas fa-caret-down"></i>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="nav-projects">
+          <li><a href="/g06.html">G06 Raider</a></li>
+          <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
+          <li><a href="/exchange-server.html">GO6 Exchange Server</a></li>
+        </ul>
+      </li>
+      <li><a href="/store.html" id="nav-store">Store</a></li>
+      <li><a href="https://discord.gg/go6" target="_blank" rel="noopener noreferrer">Discord</a></li>
+    </ul>
+    <button class="nav-burger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-main">
+        <div class="line1"></div> <div class="line2"></div> <div class="line3"></div>
+    </button>
+  </nav>
+
+  <div id="main-content-wrapper">
+    <div class="api-page-blob-1"></div>
+    <div class="api-page-blob-2"></div>
+
+    <main class="api-main-container" id="api-main-content">
+      <section class="hero-section">
+        <h1 class="tool-name">GO6 API Wrapper</h1>
+        <p class="tool-tagline">Self-hosted Discord API wrapper that runs locally for instant performance. Secure your tokens and interact with Discord's API like never before.</p>
+        <a href="https://discord.gg/g06" class="download-discord-btn" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-rocket"></i> Download & Get Started
+        </a>
+      </section>
+
+      <section class="benefits-section">
+        <h2>Why GO6 API Wrapper?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <i class="fas fa-tachometer-alt"></i>
+                <h4>Blazing Speed</h4>
+                <p>Execute Discord actions with 1-5ms response times by running the API on your local machine.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-user-shield"></i>
+                <h4>Ultimate Privacy</h4>
+                <p>Your Discord tokens and data remain entirely on your system, never passing through third-party servers.</p>
+            </div>
+            <div class="benefit-card">
+                <i class="fas fa-cogs"></i>
+                <h4>Simplified Workflow</h4>
+                <p>Easy setup with a single executable and straightforward HTTP endpoints for all your needs.</p>
+            </div>
+        </div>
+      </section>
+
+      <div class="features-box">
+        <h3><i class="fas fa-star"></i> Core Capabilities</h3>
+        <ul class="features-list">
+          <li class="feature-item">
+            <i class="fas fa-bolt feature-icon"></i>
+            <div class="feature-text">
+              <strong>Instant Performance</strong>
+              <span>Runs locally on your machine with near-zero latency (1-5ms response times)</span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-shield-halved feature-icon"></i>
+            <div class="feature-text">
+              <strong>Robust Proxy Support</strong>
+              <span>Built-in proxy rotation with format: <code>ip:port:user:pass</code> or <code>ip:port</code></span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-plug feature-icon"></i>
+            <div class="feature-text">
+              <strong>Effortless Setup</strong>
+              <span>Single executable that automatically hosts the Flask API on your local network</span>
+            </div>
+          </li>
+          <li class="feature-item">
+            <i class="fas fa-lock feature-icon"></i>
+            <div class="feature-text">
+              <strong>Private & Secure by Design</strong>
+              <span>Your tokens never leave your local machine - no external servers involved, ever.</span>
+            </div>
+          </li>
+        </ul>
+
+        <div class="stats-container">
+          <div class="stat-card">
+            <div class="stat-value">1-5ms</div>
+            <div class="stat-label">Avg. Response Time</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Local</div>
+            <div class="stat-label">Deployment</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">Uncapped</div>
+            <div class="stat-label">API Requests</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="documentation-section">
+        <div class="docs-header">
+          <i class="fas fa-book-open"></i>
+          <h2>API Reference</h2>
+        </div>
+
+        <div class="setup-instructions">
+          <h3><i class="fas fa-rocket"></i> Quick Start Guide</h3>
+          <ol class="setup-steps">
+            <li class="setup-step">Download the GO6 API Wrapper executable from our Discord server.</li>
+            <li class="setup-step">Run the executable. It will automatically start the local API server (typically on port 5000).</li>
+            <li class="setup-step">The API will be available at <code>http://localhost:5000/</code> or your machine's local IP.</li>
+            <li class="setup-step">Begin making requests to the documented endpoints below using your preferred language or tool.</li>
+          </ol>
+        </div>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-bar" placeholder="Search endpoints (e.g., /join, message, POST)..." id="endpointSearch" aria-label="Search API Endpoints">
+        </div>
+
+        <div class="endpoint active" id="endpoint-join">
+          <button class="endpoint-header" aria-expanded="true" aria-controls="endpoint-content-join" id="endpoint-header-join">
+            <span class="endpoint-title">
+              <span class="method post">POST</span>
+              <span class="path">/join</span>
+            </span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          </button>
+          <div class="endpoint-content" role="region" aria-labelledby="endpoint-header-join" id="endpoint-content-join">
+            <p class="endpoint-description">
+              Join a Discord server using an invite code with the specified token. Proxies are automatically rotated if multiple are configured.
+            </p>
+            <h4>Request Body (JSON)</h4>
+            <table class="params-table">
+              <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>token <span class="param-required">*</span></td><td>string</td><td>Discord account token.</td></tr>
+                <tr><td>invite <span class="param-required">*</span></td><td>string</td><td>Discord invite code (e.g., "discord").</td></tr>
+                <tr><td>proxy <span class="param-required">*</span></td><td>string</td><td>Proxy (<code>ip:port:user:pass</code> or <code>ip:port</code>).</td></tr>
+              </tbody>
+            </table>
+            <h4>Example Request</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Request Examples for /join endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="curl-join" id="tab-curl-join" data-target="curl-join">cURL</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="js-join" id="tab-js-join" data-target="js-join">JavaScript</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="python-join" id="tab-python-join" data-target="python-join">Python</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">Local API Call</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-curl-join" id="curl-join"><code>curl -X POST "http://localhost:5000/join" \
+-H "Content-Type: application/json" \
+-d '{
+  "token": "YOUR_DISCORD_TOKEN",
+  "invite": "TARGET_INVITE_CODE",
+  "proxy": "ip:port:user:pass"
+}'</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-js-join" id="js-join"><code>fetch('http://localhost:5000/join', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    token: 'YOUR_DISCORD_TOKEN',
+    invite: 'TARGET_INVITE_CODE',
+    proxy: 'ip:port:user:pass'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-python-join" id="python-join"><code>import requests
+
+payload = {
+  "token": "YOUR_DISCORD_TOKEN",
+  "invite": "TARGET_INVITE_CODE",
+  "proxy": "ip:port:user:pass"
+}
+response = requests.post("http://localhost:5000/join", json=payload)
+print(response.json())</code></pre>
+            </div>
+            <h4>Example Responses</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Response Examples for /join endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="success-join-resp" id="tab-success-join-resp" data-target="success-join-resp">Success (200)</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="error-join-resp" id="tab-error-join-resp" data-target="error-join-resp">Error</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">JSON Response</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-success-join-resp" id="success-join-resp"><code>{
+  "status": "success",
+  "message": "Successfully joined server.",
+  "server_id": "123456789012345678",
+  "response_time": "3ms"
+}</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-error-join-resp" id="error-join-resp"><code>{
+  "status": "error",
+  "code": "INVALID_TOKEN_OR_INVITE",
+  "message": "Failed to join. Token might be invalid or invite expired.",
+  "response_time": "1ms"
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint" id="endpoint-message">
+          <button class="endpoint-header" aria-expanded="false" aria-controls="endpoint-content-message" id="endpoint-header-message">
+            <span class="endpoint-title">
+              <span class="method post">POST</span>
+              <span class="path">/message</span>
+            </span>
+            <i class="fas fa-chevron-down toggle-icon"></i>
+          </button>
+          <div class="endpoint-content" role="region" aria-labelledby="endpoint-header-message" id="endpoint-content-message">
+            <p class="endpoint-description">Send a message to a specified Discord channel using a token.</p>
+            <h4>Request Body (JSON)</h4>
+            <table class="params-table">
+              <thead><tr><th>Parameter</th><th>Type</th><th>Description</th></tr></thead>
+              <tbody>
+                <tr><td>token <span class="param-required">*</span></td><td>string</td><td>Discord account token.</td></tr>
+                <tr><td>channel_id <span class="param-required">*</span></td><td>string</td><td>ID of the target channel.</td></tr>
+                <tr><td>content <span class="param-required">*</span></td><td>string</td><td>The message content to send.</td></tr>
+                <tr><td>proxy <span class="param-required">*</span></td><td>string</td><td>Proxy (<code>ip:port:user:pass</code> or <code>ip:port</code>).</td></tr>
+              </tbody>
+            </table>
+            <h4>Example Request</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Request Examples for /message endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="curl-message" id="tab-curl-message" data-target="curl-message">cURL</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="js-message" id="tab-js-message" data-target="js-message">JavaScript</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="python-message" id="tab-python-message" data-target="python-message">Python</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">Local API Call</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-curl-message" id="curl-message"><code>curl -X POST "http://localhost:5000/message" \
+-H "Content-Type: application/json" \
+-d '{
+  "token": "YOUR_DISCORD_TOKEN",
+  "channel_id": "TARGET_CHANNEL_ID",
+  "content": "Hello from Go6 API Wrapper!",
+  "proxy": "ip:port:user:pass"
+}'</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-js-message" id="js-message"><code>fetch('http://localhost:5000/message', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    token: 'YOUR_DISCORD_TOKEN',
+    channel_id: 'TARGET_CHANNEL_ID',
+    content: 'Hello from GO6 API Wrapper!',
+    proxy: 'ip:port:user:pass'
+  })
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-python-message" id="python-message"><code>import requests
+
+payload = {
+  "token": "YOUR_DISCORD_TOKEN",
+  "channel_id": "TARGET_CHANNEL_ID",
+  "content": "Hello from GO6 API Wrapper!",
+  "proxy": "ip:port:user:pass"
+}
+response = requests.post("http://localhost:5000/message", json=payload)
+print(response.json())</code></pre>
+            </div>
+            <h4>Example Responses</h4>
+            <div class="tab-buttons" role="tablist" aria-label="Response Examples for /message endpoint">
+              <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="success-message-resp" id="tab-success-message-resp" data-target="success-message-resp">Success (200)</button>
+              <button class="tab-btn" role="tab" aria-selected="false" aria-controls="error-message-resp" id="tab-error-message-resp" data-target="error-message-resp">Error</button>
+            </div>
+            <div class="example-request">
+              <div class="example-header"><div class="example-title">JSON Response</div><button class="copy-btn"><i class="far fa-copy"></i> Copy</button></div>
+              <pre class="tab-content active" role="tabpanel" aria-labelledby="tab-success-message-resp" id="success-message-resp"><code>{
+  "status": "success",
+  "message": "Message sent successfully.",
+  "message_id": "987654321098765432",
+  "response_time": "2ms"
+}</code></pre>
+              <pre class="tab-content" role="tabpanel" aria-labelledby="tab-error-message-resp" id="error-message-resp"><code>{
+  "status": "error",
+  "code": "CHANNEL_NOT_FOUND_OR_NO_PERMS",
+  "message": "Failed to send message. Channel not found or insufficient permissions.",
+  "response_time": "1ms"
+}</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <button id="back-to-top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
+
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let lenis; // Declare lenis here to make it available in the scope
+
+    // 1. Initialize Lenis (as per home page guide example parts)
+    if (window.Lenis) {
+        lenis = new Lenis({
+            duration: 1.3,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+            // Using a simpler config similar to what the home page guide implies
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+    }
+
+    // 2. Get essential elements for visibility
+    const mainContentWrapper = document.getElementById('main-content-wrapper');
+    const mainNav = document.querySelector('.main-nav');
+    const body = document.body;
+
+    // 3. Make content visible (this MUST run reliably)
+    if (mainNav) mainNav.classList.add('visible');
+    if (mainContentWrapper) mainContentWrapper.classList.add('visible');
+    body.classList.add('content-visible');
+
+
+    function getMediaPath(fileName) { return '/media/' + fileName; }
+
+    const navLogoImg = document.getElementById('navbar-logo');
+    if (navLogoImg) {
+        if (body.classList.contains('api-wrapper-page')) {
+            navLogoImg.src = getMediaPath('greengo6.png');
+        } else if (body.classList.contains('exchange-server-page')) {
+            navLogoImg.src = getMediaPath('yellowlogo.png');
+        } else {
+            navLogoImg.src = getMediaPath('logo.png');
+        }
+    }
+
+    initializePageScripts(); 
+    initScrollReveal();
+    animateStatCounters(); 
+
+    // Handle skip link with Lenis
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) { // Check if skipLink exists
+        skipLink.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId.startsWith('#')) {
+                e.preventDefault();
+                if (lenis) {
+                   
+                    const navElement = document.querySelector('.main-nav');
+                    const navHeight = navElement ? navElement.offsetHeight : 70;
+                    lenis.scrollTo(targetId, { offset: -navHeight });
+                } else {
+                    // Fallback if Lenis is not available
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - (document.querySelector('.main-nav')?.offsetHeight || 70),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+
+    function initializePageScripts() {
+      const burger = document.querySelector('.nav-burger');
+      const navMenu = document.querySelector('.nav-links');
+      const navMenuId = navMenu ? (navMenu.id || 'nav-links-main') : 'nav-links-main';
+      if (navMenu && !navMenu.id) navMenu.id = navMenuId;
+      if(burger && navMenu) burger.setAttribute('aria-controls', navMenuId);
+
+
+      const navLinkItems = document.querySelectorAll('.nav-links > li');
+
+      if (burger && navMenu) {
+        burger.addEventListener('click', () => {
+          const isExpanded = navMenu.classList.toggle('nav-active');
+          burger.setAttribute('aria-expanded', isExpanded.toString());
+          burger.classList.toggle('toggle');
+          if (navMenu.classList.contains('nav-active')) {
+            navMenu.style.overflowY = 'auto';
+          } else {
+            navMenu.style.overflowY = 'hidden';
+          }
+
+          navLinkItems.forEach((item, index) => {
+            if (item.style.animation) { item.style.animation = ''; }
+            else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
+          });
+        });
+      }
+
+      if (navMenu) {
+        navMenu.querySelectorAll('a').forEach(link => {
+          if (!link.classList.contains('nav-projects-link')) {
+            link.addEventListener('click', (e) => {
+              const href = link.getAttribute('href');
+              if (href && href.startsWith('#') && lenis) {
+                e.preventDefault();
+                const navElement = document.querySelector('.main-nav');
+                const navHeight = navElement ? navElement.offsetHeight : 70;
+                lenis.scrollTo(href, {offset: -navHeight});
+              }
+              if (navMenu.classList.contains('nav-active') && !link.closest('.dropdown-menu')) {
+                navMenu.classList.remove('nav-active');
+                navMenu.style.overflowY = 'hidden';
+                if (burger) {
+                    burger.classList.remove('toggle');
+                    burger.setAttribute('aria-expanded', 'false');
+                }
+                navLinkItems.forEach(item => item.style.animation = '');
+              }
+            });
+          }
+        });
+      }
+
+      const projectsLink = document.querySelector('.nav-projects-link');
+      if (projectsLink) {
+        projectsLink.addEventListener('click', function(e) {
+          if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
+            e.preventDefault();
+            const parentLi = this.parentElement;
+            const isDropdownOpen = parentLi.classList.toggle('dropdown-open');
+            this.setAttribute('aria-expanded', isDropdownOpen.toString());
+            const dropdownMenu = parentLi.querySelector('.dropdown-menu');
+            if (dropdownMenu) { // Ensure dropdown menu exists
+                if (parentLi.classList.contains('dropdown-open')) {
+                    dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + "px";
+                } else {
+                    dropdownMenu.style.maxHeight = '0';
+                }
+            }
+          }
+        });
+      }
+
+      const currentPagePath = window.location.pathname;
+      const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
+      const normalizePath = (path) => {
+        if (!path) return '';
+        if (!path.startsWith('/')) path = '/' + path;
+        if (path === '/' || path === '/index' || path.endsWith('/index.html')) return '/index.html';
+        if (!path.endsWith('/') && !path.includes('.')) path += '.html';
+        return path;
+      };
+      let normalizedCurrentPagePath = normalizePath(currentPagePath);
+
+      if (currentPagePath.includes('api-wrapper')) {
+        normalizedCurrentPagePath = '/api-wrapper.html';
+      } else if (currentPagePath.includes('exchange-server')) {
+        normalizedCurrentPagePath = '/exchange-server.html';
+      } else if (currentPagePath.includes('app-raider')){
+          normalizedCurrentPagePath = '/app-raider.html';
+      } else if (currentPagePath.includes('g06')){ // Generic match for g06.html
+          normalizedCurrentPagePath = '/g06.html';
+      }
+
+
+      allNavAnchors.forEach(anchor => {
+        let linkHref = anchor.getAttribute('href');
+        if (!linkHref || linkHref === '#') return;
+        let normalizedLinkHref = normalizePath(linkHref);
+
+        if (normalizedLinkHref === normalizedCurrentPagePath) {
+          anchor.classList.add('active');
+          const dropdownParent = anchor.closest('.nav-item-dropdown');
+          if (dropdownParent) {
+            const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
+            if (projectsMainLink) projectsMainLink.classList.add('active');
+          }
+        } else {
+          if (!(anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active'))) {
+            anchor.classList.remove('active');
+          }
+        }
+      });
+      if (document.querySelector('.dropdown-menu a.active')) {
+        const projectsMainLink = document.getElementById('nav-projects');
+        if (projectsMainLink && !projectsMainLink.classList.contains('active')) { // Only add if not already active from direct page match
+             projectsMainLink.classList.add('active');
+        }
+      }
+
+      const searchInput = document.getElementById('endpointSearch');
+      if(searchInput){
+        searchInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase().trim();
+          const endpoints = document.querySelectorAll('.endpoint');
+          endpoints.forEach(endpointEl => {
+            const path = endpointEl.querySelector('.path').textContent.toLowerCase();
+            const descriptionEl = endpointEl.querySelector('.endpoint-description');
+            const description = descriptionEl ? descriptionEl.textContent.toLowerCase() : "";
+            const methodEl = endpointEl.querySelector('.method');
+            const method = methodEl ? methodEl.textContent.toLowerCase() : "";
+
+            if (path.includes(searchTerm) || description.includes(searchTerm) || method.includes(searchTerm)) {
+              endpointEl.style.display = '';
+            } else {
+              endpointEl.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      document.querySelectorAll('button.endpoint-header').forEach(header => {
+        header.addEventListener('click', function() {
+          const endpointElement = this.closest('.endpoint');
+          const isExpanded = endpointElement.classList.toggle('active');
+          this.setAttribute('aria-expanded', isExpanded.toString());
+        });
+      });
+
+      document.querySelectorAll('.tab-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const targetId = this.dataset.target;
+          const tabList = this.closest('.tab-buttons');
+          let currentTabPanelsContainer = this.closest('.example-request');
+          if (!currentTabPanelsContainer) {
+             currentTabPanelsContainer = tabList.parentElement;
+          }
+
+          if (tabList) {
+            tabList.querySelectorAll('.tab-btn').forEach(btn => {
+              btn.classList.remove('active');
+              btn.setAttribute('aria-selected', 'false');
+            });
+          }
+
+          this.classList.add('active');
+          this.setAttribute('aria-selected', 'true');
+
+          if (currentTabPanelsContainer) {
+            currentTabPanelsContainer.querySelectorAll('.tab-content').forEach(content => {
+                if (tabList && tabList.querySelector(`[data-target="${content.id}"]`)) {
+                    if (content.id === targetId) {
+                        content.classList.add('active');
+                    } else {
+                        content.classList.remove('active');
+                    }
+                }
+            });
+          } else {
+            const targetContent = document.getElementById(targetId);
+            if(targetContent) targetContent.classList.add('active');
+          }
+        });
+      });
+
+      document.querySelectorAll('.copy-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          copyToClipboard(this);
+        });
+      });
+
+      const backToTopButton = document.getElementById('back-to-top');
+      if (backToTopButton) {
+        // Use Lenis scroll event if Lenis is active
+        if (lenis) {
+            lenis.on('scroll', (e) => {
+                if (e.scroll > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+        } else { // Fallback to window scroll event
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTopButton.classList.add('visible');
+                } else {
+                    backToTopButton.classList.remove('visible');
+                }
+            });
+        }
+
+        backToTopButton.addEventListener('click', () => {
+          if (lenis) {
+            lenis.scrollTo(0, { duration: 1.5 });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        });
+      }
+    }
+
+    function copyToClipboard(btn) {
+      const exampleContainer = btn.closest('.example-request');
+      const activeTabContent = exampleContainer.querySelector('.tab-content.active');
+
+      if (activeTabContent) {
+        const codeElement = activeTabContent.querySelector('code');
+        const textToCopy = codeElement ? codeElement.textContent : activeTabContent.textContent;
+
+        navigator.clipboard.writeText(textToCopy.trim()).then(() => {
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          btn.classList.add('copied');
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.classList.remove('copied');
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<i class="fas fa-times"></i> Failed';
+          setTimeout(() => {
+            btn.innerHTML = originalHTML;
+          }, 2000);
+        });
+      }
+    }
+
+    function initScrollReveal() {
+      const sectionsToReveal = document.querySelectorAll('.benefits-section, .features-box, .documentation-section');
+      if (!sectionsToReveal.length) return;
+
+      sectionsToReveal.forEach(section => {
+        section.classList.add('section-hidden');
+      });
+
+      const observer = new IntersectionObserver((entries, observerInstance) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('section-hidden');
+            entry.target.classList.add('section-visible');
+            observerInstance.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      sectionsToReveal.forEach(section => {
+        observer.observe(section);
+      });
+    }
+
+    function animateStatCounters() {
+      const statValueElements = document.querySelectorAll('.stat-card .stat-value');
+      if (!statValueElements.length) return;
+
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const el = entry.target;
+            const originalText = el.dataset.originalText || el.textContent.trim();
+            el.dataset.originalText = originalText;
+
+            if (originalText.match(/^\d+-\d+ms$/)) {
+              const parts = originalText.split('ms')[0].split('-');
+              const startRangeStr = parts[0];
+              const endRangeTarget = parseInt(parts[1], 10);
+              el.textContent = `${startRangeStr}-0ms`;
+              let currentEndRange = 0;
+              const animationSpeed = endRangeTarget > 10 ? 40 : 75;
+              const increment = endRangeTarget > 20 ? Math.ceil(endRangeTarget/20) : 1;
+
+              const interval = setInterval(() => {
+                currentEndRange += increment;
+                if (currentEndRange > endRangeTarget) currentEndRange = endRangeTarget;
+                el.textContent = `${startRangeStr}-${currentEndRange}ms`;
+                if (currentEndRange >= endRangeTarget) {
+                  clearInterval(interval);
+                  el.textContent = originalText;
+                }
+              }, animationSpeed);
+            } else if (!isNaN(parseFloat(originalText)) && isFinite(originalText)) {
+              const target = parseFloat(originalText);
+              el.textContent = '0';
+              let current = 0;
+              const step = target > 0 ? Math.max(1, Math.ceil(target / 50)) : 0;
+              const interval = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                  clearInterval(interval);
+                  el.textContent = originalText;
+                } else {
+                  el.textContent = Math.ceil(current);
+                }
+              }, 30);
+            } else {
+              el.style.opacity = '0';
+              el.textContent = originalText;
+              setTimeout(() => {
+                el.style.transition = 'opacity 0.8s ease-in-out';
+                el.style.opacity = '1';
+              }, 50);
+            }
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      statValueElements.forEach(valueEl => {
+        valueEl.dataset.originalText = valueEl.textContent.trim();
+        if (!(valueEl.dataset.originalText.match(/^\d+-\d+ms$/) || (!isNaN(parseFloat(valueEl.dataset.originalText)) && isFinite(valueEl.dataset.originalText)))) {
+           valueEl.textContent = '';
+        }
+        observer.observe(valueEl);
+      });
+    }
+
+  });
+  </script>
+</body>
+</html>
