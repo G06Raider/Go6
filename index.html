@@ -22,10 +22,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    html {
-        overflow: hidden;
-    }
-
     * {
         margin: 0;
         padding: 0;
@@ -77,7 +73,7 @@
     body {
         background-color: var(--dark-bg); color: var(--text-primary);
         min-height: 100vh; position: relative; padding-top: 0;
-        overflow: hidden;
+        /* FIX 1 REMOVED: overflow: hidden; */
     }
     body.content-visible { padding-top: var(--nav-height); }
 
@@ -289,7 +285,7 @@
         margin-top: 3rem;
         margin-bottom: 3rem;
         padding: 2rem 1rem;
-        background: rgba(var(--medium-bg), 0.5);
+        background: rgba(20, 20, 20, 0.5); /* Note: --medium-bg is a hex, not rgb components */
         border-radius: 12px;
         max-width: 800px;
         margin-left: auto;
@@ -373,7 +369,7 @@
             backdrop-filter: blur(10px); display: flex; flex-direction: column;
             align-items: stretch; width: 60%; transform: translateX(100%);
             transition: transform 0.5s ease-in-out; padding-top: 1rem;
-            overflow-y: auto;
+            overflow-y: auto; /* This is good for mobile nav */
         }
         .nav-links li {
             opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%;
@@ -389,7 +385,6 @@
             overflow: hidden;
             position: static; transform: none; width: 100%;
             box-shadow: none; border-radius: 0; margin-top: 0;
-            /* Removed padding-left from here for cleaner child padding */
             background-color: rgba(15, 15, 15, 0.7);
             transform: translateY(-10px);
             transition: opacity 0.3s ease, visibility 0s linear 0.3s, max-height 0.3s ease, transform 0.3s ease;
@@ -397,19 +392,17 @@
         .nav-links li.dropdown-open > .dropdown-menu {
             opacity: 1;
             visibility: visible;
-            max-height: 400px;
+            max-height: 400px; /* Ensure this is enough for your largest dropdown */
             transform: translateY(0);
             transition-delay: 0s, 0s, 0s, 0s;
         }
 
         .dropdown-menu a {
-            /* Adjusted padding for better indentation on mobile */
             padding: 0.8rem 1.5rem 0.8rem 2.5rem;
             font-size: 0.9rem;
         }
         .dropdown-menu a:hover {
             background-color: var(--primary-purple);
-            /* Adjusted hover padding to maintain relative indent */
             padding-left: 2.8rem;
         }
         .nav-active { transform: translateX(0%); }
@@ -441,19 +434,19 @@
     <a href="index.html"><img src="/media/logo.png" alt="Go6 Logo" id="navbar-logo"></a>
   </div>
   <ul class="nav-links">
-    <li><a href="/index.html" id="nav-home">Home</a></li>
-    <li><a href="/about.html" id="nav-about">About Us</a></li>
+    <li><a href="index.html" id="nav-home">Home</a></li>
+    <li><a href="about.html" id="nav-about">About Us</a></li>
     <li class="nav-item-dropdown">
       <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
         Projects <i class="fas fa-caret-down"></i>
       </a>
       <ul class="dropdown-menu" aria-labelledby="nav-projects">
-        <li><a href="/g06.html">G06 Raider</a></li>
-        <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
-        <li><a href="/exchange-server.html">GO6 Exchange Server</a></li>
+        <li><a href="https://go6.lol/g06.html">G06 Raider</a></li>
+        <li><a href="api-wrapper.html">Discord API Wrapper</a></li>
+        <li><a href="exchange-server.html">GO6 Exchange Server</a></li>
       </ul>
     </li>
-    <li><a href="/store.html" id="nav-store">Store</a></li>
+    <li><a href="store.html" id="nav-store">Store</a></li>
     <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
   </ul>
   <div class="nav-burger">
@@ -502,8 +495,6 @@
     </main>
   </div>
 
-
-
   <script>
   document.addEventListener('DOMContentLoaded', function() {
     const preEntryScreen = document.getElementById('pre-entry-screen');
@@ -512,7 +503,7 @@
     const body = document.body;
     const root = document.documentElement;
 
-
+    // Removed Lenis smooth scrolling library and related code
 
     function getMediaPath(fileName) { return '/media/' + fileName; }
 
@@ -530,10 +521,10 @@
             if(mainContentWrapper) mainContentWrapper.classList.add('visible');
             body.classList.add('content-visible');
             initializePageScripts();
-        }, 50);
+        }, 50); // Short delay for pre-entry fade before content animates
       }, { once: true });
     } else {
-      if(preEntryScreen) preEntryScreen.classList.add('hidden');
+      if(preEntryScreen) preEntryScreen.classList.add('hidden'); // Ensure it's hidden if not displayed initially
       if(mainNav) mainNav.classList.add('visible');
       if(mainContentWrapper) mainContentWrapper.classList.add('visible');
       body.classList.add('content-visible');
@@ -542,19 +533,20 @@
 
     function typewriterEffect(element, text, speed = 50) {
       let i = 0;
-      element.innerHTML = '';
+      element.innerHTML = ''; // Clear existing content
       const cursorSpan = document.createElement('span');
       cursorSpan.className = 'typing-cursor';
 
       function type() {
         if (i < text.length) {
-          if (i === 0 && !element.contains(cursorSpan)) {
-            element.appendChild(cursorSpan);
+          if (i === 0 && !element.contains(cursorSpan)) { // Add cursor before typing starts
+              element.appendChild(cursorSpan);
           }
           element.insertBefore(document.createTextNode(text.charAt(i)), cursorSpan);
           i++;
           setTimeout(type, speed);
         }
+        // Cursor remains at the end by default
       }
       type();
     }
@@ -562,38 +554,44 @@
     function initializePageScripts() {
       const burger = document.querySelector('.nav-burger');
       const navMenu = document.querySelector('.nav-links');
-      const navLinkItems = document.querySelectorAll('.nav-links > li');
+      const navLinkItems = document.querySelectorAll('.nav-links > li'); // Direct children for animation
 
       if (burger && navMenu) {
         burger.addEventListener('click', () => {
           navMenu.classList.toggle('nav-active');
-          if (navMenu.classList.contains('nav-active')) {
-            navMenu.style.overflowY = 'auto';
-          } else {
-            navMenu.style.overflowY = 'hidden';
-          }
+          body.style.overflow = navMenu.classList.contains('nav-active') ? 'hidden' : ''; // Prevent body scroll when mobile menu is open
 
-          navLinkItems.forEach((item, index) => {
-              if (item.style.animation) { item.style.animation = ''; }
-              else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
-          });
+          if (navMenu.classList.contains('nav-active')) {
+            // Animate links in
+            navLinkItems.forEach((item, index) => {
+                item.style.opacity = '0'; // Reset for animation
+                item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+            });
+          } else {
+            // Reset animations if menu is closed
+            navLinkItems.forEach(item => {
+                item.style.animation = '';
+                item.style.opacity = ''; // Or set to '0' if they should fade out
+            });
+          }
           burger.classList.toggle('toggle');
         });
       }
 
       if (navMenu) {
           navMenu.querySelectorAll('a').forEach(link => {
-              if (!link.classList.contains('nav-projects-link')) {
+              if (!link.classList.contains('nav-projects-link')) { // Exclude project dropdown toggle
                   link.addEventListener('click', (e) => {
-                      const href = link.getAttribute('href');
-                      if (href && href.startsWith('#') && lenis) {
-                          // Lenis will handle scroll for anchor links if configured
-                      }
-                      if (navMenu.classList.contains('nav-active') && !link.closest('.dropdown-menu')) {
+                      // No specific Lenis smooth scroll handling needed; default browser behavior will apply for anchors.
+                      // Close mobile nav if a link (not a dropdown toggle) is clicked
+                      if (navMenu.classList.contains('nav-active') && !link.closest('.nav-item-dropdown')) {
                           navMenu.classList.remove('nav-active');
-                          navMenu.style.overflowY = 'hidden';
+                          body.style.overflow = '';
                           if (burger) burger.classList.remove('toggle');
-                          navLinkItems.forEach(item => item.style.animation = '');
+                          navLinkItems.forEach(item => {
+                            item.style.animation = '';
+                            item.style.opacity = '';
+                          });
                       }
                   });
               }
@@ -604,7 +602,7 @@
       if (projectsLink) {
           projectsLink.addEventListener('click', function(e) {
               if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
-                  e.preventDefault();
+                  e.preventDefault(); // Prevent page jump for '#' href on mobile when opening dropdown
                   const parentLi = this.parentElement;
                   parentLi.classList.toggle('dropdown-open');
                   this.setAttribute('aria-expanded', parentLi.classList.contains('dropdown-open').toString());
@@ -646,36 +644,42 @@
               root.style.setProperty('--blob2-mouse-y', `${moveYFactor * 1.2}px`);
           }
       }
-      updateBlobPositions();
+      updateBlobPositions(); // Initial call
 
-
+      // Removed Lenis scroll event listener for blob animation.
+      // The blobs will now only react to mouse movement.
 
       const currentPagePath = window.location.pathname;
       const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
       const normalizePath = (path) => {
           if (!path) return '';
-          if (!path.startsWith('/')) path = '/' + path;
+          // Ensure leading slash
+          if (!path.startsWith('/') && !path.startsWith('http') && path !== '#') path = '/' + path;
+
+          // Handle index variations
           if (path === '/' || path === '/index' || path.endsWith('/index.html')) return '/index.html';
-          // Ensure .html is added if not present and not an anchor/external link
-          if (!path.endsWith('/') && !path.includes('.') && !path.startsWith('#') && !path.startsWith('http')) path += '.html';
+
+          // Add .html if missing for relative paths (and not an anchor or external link)
+          if (!path.includes('.') && !path.startsWith('#') && !path.startsWith('http') && !path.endsWith('/')) {
+            path += '.html';
+          }
           return path;
       };
 
       let normalizedCurrentPagePath = normalizePath(currentPagePath);
 
-      // Specific normalizations if needed for project pages (current logic seems okay)
-      if (currentPagePath.includes('g06.html') || currentPagePath.endsWith('/g06')) {
-          normalizedCurrentPagePath = '/g06.html';
-      } else if (currentPagePath.includes('api-wrapper')) {
-          normalizedCurrentPagePath = '/api-wrapper.html';
-      } else if (currentPagePath.includes('exchange-server')) {
-          normalizedCurrentPagePath = '/exchange-server.html';
-      }
-
-
       allNavAnchors.forEach(anchor => {
         let linkHref = anchor.getAttribute('href');
-        if (!linkHref || linkHref === '#') return;
+        if (!linkHref || linkHref.startsWith('http') || linkHref === '#') { // Skip external links and empty hrefs for active state
+            if (linkHref === '#') { // Keep active class logic for dropdown toggles if they have it
+                if (anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active')) {
+                    anchor.classList.add('active');
+                } else {
+                    // anchor.classList.remove('active'); // Avoid removing active if it's just a toggle
+                }
+            }
+            return;
+        }
         let normalizedLinkHref = normalizePath(linkHref);
 
         if (normalizedLinkHref === normalizedCurrentPagePath) {
@@ -686,11 +690,10 @@
             if (projectsMainLink) projectsMainLink.classList.add('active');
           }
         } else {
-            // Ensure 'active' is removed if not the current page,
-            // unless it's the "Projects" main link and a sub-item is active.
-            if (!(anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active'))) {
-              anchor.classList.remove('active');
-            }
+           // Only remove 'active' if it's not the main projects link that should stay active due to a sub-item
+           if (!(anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active'))) {
+             anchor.classList.remove('active');
+           }
         }
       });
 
@@ -705,10 +708,10 @@
       const pageTitle = document.querySelector('.page-title');
       if (pageTitle && pageTitle.textContent && !pageTitle.dataset.animated) {
           const text = pageTitle.textContent.trim();
-          pageTitle.innerHTML = '';
+          pageTitle.innerHTML = ''; // Clear current content before adding spans
           text.split('').forEach((char, index) => {
               const span = document.createElement('span');
-              span.textContent = char === ' ' ? '\u00A0' : char;
+              span.textContent = char === ' ' ? '\u00A0' : char; // Preserve spaces
               span.style.animation = `fadeInChar 0.3s ease-out forwards ${index * 0.04}s`;
               pageTitle.appendChild(span);
           });
@@ -719,7 +722,7 @@
       if (projectCards.length > 0 && 'IntersectionObserver' in window) {
           const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
           const observerCallback = (entries, observer) => {
-              entries.forEach((entry) => {
+              entries.forEach((entry, i) => { // Use i for staggered delay base
                   if (entry.isIntersecting) {
                       const cardIndex = Array.from(projectCards).indexOf(entry.target);
                       entry.target.style.animation = `flyInUp 0.6s ease-out ${cardIndex * 0.12}s forwards`;
@@ -730,26 +733,37 @@
           const cardObserver = new IntersectionObserver(observerCallback, observerOptions);
           projectCards.forEach(card => cardObserver.observe(card));
       } else {
-          projectCards.forEach(card => card.style.opacity = '1');
+          projectCards.forEach(card => card.style.opacity = '1'); // Fallback if no IntersectionObserver
       }
 
       const subtitleElement = document.querySelector('.page-subtitle');
       if (subtitleElement) {
         const originalSubtitleText = subtitleElement.dataset.text || subtitleElement.textContent.trim();
         if (originalSubtitleText) {
-          if (!subtitleElement.dataset.text) {
-             subtitleElement.innerHTML = ''; // Clear only if not using data-text to avoid flicker
+          // Ensure element is empty before starting typewriter, only if not using data-text and it has no children
+          if (!subtitleElement.dataset.text && subtitleElement.innerHTML.trim() !== '' && !subtitleElement.querySelector('.typing-cursor')) {
+            subtitleElement.innerHTML = '';
+          } else if (!subtitleElement.querySelector('.typing-cursor')){
+            // If data-text is used, or element is already empty, ensure no old text node remains
+            subtitleElement.innerHTML = '';
           }
+
+          // Delay based on title animation completion
+          let titleAnimationDuration = 0;
+          if (pageTitle && pageTitle.dataset.animated) {
+            const titleTextLength = pageTitle.textContent.trim().length;
+            titleAnimationDuration = titleTextLength * 0.04 * 1000 + 300; // Corresponds to fadeInChar animation
+          } else {
+            titleAnimationDuration = 1000; // Default delay if title isn't animated or not found
+          }
+
           setTimeout(() => {
             typewriterEffect(subtitleElement, originalSubtitleText, 30);
-          }, (pageTitle && pageTitle.dataset.animated) ? (pageTitle.textContent.length * 0.04 * 1000 + 300) : 1000); // Delay after title animation or 1s
+          }, titleAnimationDuration);
         }
       }
     }
   });
   </script>
-
-
 </body>
-</html>
 </html>
