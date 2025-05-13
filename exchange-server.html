@@ -20,10 +20,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    html {
-      scroll-behavior: smooth; /* Fallback */
-      overflow: hidden; /* Hide native scrollbar */
-    }
     * {
       margin: 0;
       padding: 0;
@@ -31,23 +27,24 @@
       font-family: 'Inter', sans-serif;
     }
     :root {
-      --primary-purple: #de5af0;
-      --light-purple: #a78bfa;
+      --primary-purple: #de5af0; /* Kept for base nav styles before page-specific override */
+      --light-purple: #a78bfa; /* Kept for base nav styles */
       --discord-blue: #5865F2;
       --dark-bg: #0a0a0a;
       --medium-bg: #141414;
       --card-bg: rgba(22, 22, 22, 0.85);
       --text-primary: #fff;
-      --text-secondary: #b0b0b0;
+      --text-secondary: #b0b0b0; /* Slightly lighter for better readability on dark theme */
       --text-tertiary: #888;
       --nav-height: 70px;
 
-      --exchange-color: #f0b90b;
-      --exchange-gradient-start: #f7d972;
-      --exchange-gradient-end: #f0b90b;
-      --exchange-accent-dark: #d8a000;
-      --exchange-text-on-accent: #1c1c1c;
-      --exchange-card-bg: rgba(30, 30, 30, 0.85);
+      /* Exchange page specific theme colors */
+      --exchange-color: #f0b90b; /* Main yellow */
+      --exchange-gradient-start: #f7d972; /* Lighter yellow for gradients */
+      --exchange-gradient-end: #f0b90b;   /* Main yellow for gradients */
+      --exchange-accent-dark: #d8a000;   /* Darker yellow for accents/blobs */
+      --exchange-text-on-accent: #1c1c1c; /* Dark text for yellow backgrounds */
+      --exchange-card-bg: rgba(30, 30, 30, 0.85); /* Slightly different card bg for this page if needed */
     }
 
     .skip-link {
@@ -63,10 +60,12 @@
     body {
       background-color: var(--dark-bg); color: var(--text-primary);
       min-height: 100vh; position: relative; padding-top: 0;
-      overflow: hidden; /* Hide native scrollbar */
+      /* FIX 1 REMOVED: overflow: hidden; */ /* This was preventing scrolling */
+      /* Lenis will manage scroll behavior, so overflow-y: auto or visible is fine */
     }
     body.content-visible { padding-top: var(--nav-height); }
 
+    /* Page-specific theme overrides for navigation */
     body.exchange-server-page .skip-link {
       background: var(--exchange-color);
       color: var(--exchange-text-on-accent);
@@ -81,30 +80,32 @@
       color: var(--exchange-color);
     }
 
+    /* Ensure "Projects" dropdown toggle also gets themed if it's active due to a child */
     body.exchange-server-page .main-nav #nav-projects.active {
-      color: var(--exchange-color) !important;
+      color: var(--exchange-color) !important; /* Important to override general active color */
     }
-
-    body.exchange-server-page .main-nav #nav-projects:hover {
+     body.exchange-server-page .main-nav #nav-projects.nav-projects-link:hover {
       color: var(--exchange-color);
     }
 
+
     body.exchange-server-page .dropdown-menu a:hover {
-      background-color: var(--exchange-color) !important;
-      color: var(--exchange-text-on-accent) !important;
+      background-color: var(--exchange-color) !important; /* Ensure override */
+      color: var(--exchange-text-on-accent) !important; /* Ensure override */
     }
     body.exchange-server-page .dropdown-menu a.active {
-      color: var(--exchange-color) !important;
-      background-color: rgba(240, 185, 11, 0.15) !important;
+      color: var(--exchange-color) !important; /* Ensure override */
+      background-color: rgba(240, 185, 11, 0.15) !important; /* Subtle background for active item in dropdown */
     }
+
 
     .exchange-page-blob-1, .exchange-page-blob-2 {
       position: fixed;
       border-radius: 50%;
-      opacity: 0.20;
-      z-index: -1;
-      pointer-events: none;
-      filter: blur(140px);
+      opacity: 0.20; /* Initial opacity for animation */
+      z-index: -1; /* Behind all content */
+      pointer-events: none; /* Non-interactive */
+      filter: blur(140px); /* Strong blur */
     }
     .exchange-page-blob-1 {
       width: 550px; height: 550px; background: var(--exchange-color);
@@ -129,14 +130,14 @@
       display: none; justify-content: space-between; align-items: center;
       width: 100%; height: var(--nav-height); padding: 0 2rem;
       position: fixed; top: 0; left: 0; z-index: 1000;
-      background-color: rgba(10, 10, 10, 0.45);
-      backdrop-filter: blur(12px);
+      background-color: rgba(10, 10, 10, 0.45); /* Slightly more opaque for readability */
+      backdrop-filter: blur(12px); /* Stronger blur */
       transition: background-color 0.3s ease, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
       box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; visibility: hidden;
     }
     .main-nav.visible { display: flex; opacity: 1; visibility: visible; }
     .nav-logo a { display: flex; align-items: center; height: 100%; }
-    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; transition: content 0.3s ease; }
+    .nav-logo img { max-height: calc(var(--nav-height) - 20px); width: auto; object-fit: contain; transition: content 0.3s ease; /* For potential JS-driven src change */ }
     .nav-links { display: flex; align-items: center; list-style: none; height: 100%; }
     .nav-links li { position: relative; margin-left: 2.5rem; display: flex; align-items: center; height: 100%; }
     .nav-links a {
@@ -148,18 +149,19 @@
     .nav-links li.dropdown-open > a .fa-caret-down { transform: rotate(180deg); }
     .nav-links a::after {
       content: ''; position: absolute; width: 0; height: 2px; bottom: 0; left: 50%;
-      transform: translateX(-50%); background-color: var(--primary-purple);
+      transform: translateX(-50%); background-color: var(--primary-purple); /* Default color, overridden by page specific style */
       transition: width 0.3s ease, background-color 0.3s ease;
     }
-    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a:hover { color: var(--text-primary); } /* Default hover, overridden by page specific */
     .nav-links li > a:hover { transform: translateY(-2px); }
-    .nav-links a.active { color: var(--text-primary); }
+    .nav-links a.active { color: var(--text-primary); } /* Default active, overridden by page specific */
     .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
 
     .dropdown-menu {
       opacity: 0; visibility: hidden; position: absolute; top: 100%; left: 50%;
       transform: translateX(-50%) translateY(10px);
-      background-color: rgba(20, 20, 20, 0.95); backdrop-filter: blur(10px);
+      background-color: rgba(20, 20, 20, 0.95); /* More opaque dropdown */
+      backdrop-filter: blur(10px);
       border-radius: 8px; padding: 0.5rem 0; min-width: 220px; z-index: 1100;
       list-style: none; box-shadow: 0 8px 25px rgba(0,0,0,0.35); margin-top: 5px;
       transition: opacity 0.25s ease-out, visibility 0s linear 0.25s, transform 0.25s ease-out;
@@ -175,15 +177,17 @@
       font-size: 0.95rem; white-space: nowrap;
       transition: background-color 0.2s ease, color 0.2s ease, padding-left 0.2s ease;
     }
+    /* Default hover & active overridden by page-specific if .exchange-server-page is present */
     .dropdown-menu a:hover { background-color: var(--primary-purple); color: var(--text-primary); padding-left: 1.8rem; transform: translateY(0); }
-    .dropdown-menu a.active { color: var(--text-primary); background-color: rgba(222, 90, 240, 0.2);}
+    .dropdown-menu a.active { color: var(--text-primary); background-color: rgba(var(--primary-purple-rgb, 222, 90, 240), 0.2);}
     .dropdown-menu a::after { display: none; }
+
     .nav-burger { display: none; cursor: pointer; flex-direction: column; justify-content: space-around; width: 25px; height: 21px; background:transparent; border:none; padding:0;}
     .nav-burger div { width: 25px; height: 3px; background-color: var(--text-primary); transition: all 0.3s ease; border-radius: 1px; }
 
     #main-content-wrapper {
       min-height: calc(100vh - var(--nav-height));
-      padding: 3rem 1rem;
+      padding: 3rem 1rem; /* Consistent padding */
       position: relative;
       opacity: 0;
       transform: translateY(15px);
@@ -195,28 +199,28 @@
 
     .hero-section {
       text-align: center;
-      padding: 5rem 0 4rem;
-      position: relative;
+      padding: 5rem 0 4rem; /* Generous padding for impact */
+      position: relative; /* For potential pseudo-elements or layered effects if added later */
     }
     .hero-section .tool-name {
       font-size: 4rem;
       font-weight: 700; margin-bottom: 1.5rem;
       background: linear-gradient(90deg, var(--exchange-gradient-start), var(--exchange-gradient-end));
       -webkit-background-clip: text; background-clip: text; color: transparent;
-      letter-spacing: -1px;
+      letter-spacing: -1px; /* Tighten up large text */
       line-height: 1.2;
     }
     .hero-section .tool-name .coming-soon-badge {
-        display: block;
+        display: block; /* Or inline-block if preferred next to title */
         font-size: 1.5rem;
         font-weight: 500;
         color: var(--exchange-color);
         letter-spacing: 0.5px;
         margin-top: 0.5rem;
-        background: rgba(240, 185, 11, 0.1);
+        background: rgba(240, 185, 11, 0.1); /* Subtle background for badge */
         padding: 0.3rem 0.8rem;
         border-radius: 20px;
-        max-width: 250px;
+        max-width: 250px; /* Control width of badge */
         margin-left: auto;
         margin-right: auto;
     }
@@ -231,16 +235,17 @@
       color: var(--exchange-text-on-accent);
       padding: 1rem 2.5rem; border-radius: 50px; text-decoration: none;
       font-weight: 600; font-size: 1.1rem;
-      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+      transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth, slightly bouncy transition */
       border: none; cursor: pointer;
-      box-shadow: 0 8px 20px rgba(240, 185, 11, 0.35);
+      box-shadow: 0 8px 20px rgba(240, 185, 11, 0.35); /* Themed shadow */
     }
     .hero-section .cta-button:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 12px 30px rgba(240, 185, 11, 0.45);
+      transform: translateY(-4px) scale(1.03); /* Lift and slightly enlarge */
+      box-shadow: 0 12px 30px rgba(240, 185, 11, 0.45); /* Enhanced shadow on hover */
     }
     .hero-section .cta-button i { font-size: 1.3rem; margin-right: 0.2rem; }
 
+    /* Scroll reveal classes */
     .section-hidden {
       opacity: 0;
       transform: translateY(30px);
@@ -251,20 +256,20 @@
       transform: translateY(0);
     }
 
-    .content-section { margin-bottom: 4rem; padding: 2rem 0; }
+    .content-section { margin-bottom: 4rem; padding: 2rem 0; } /* Consistent bottom margin for sections */
     .content-section h2 {
       text-align: center; font-size: 2.5rem;
       font-weight: 600; margin-bottom: 3rem; color: var(--text-primary);
     }
-    .content-section h2 i {
+    .content-section h2 i { /* Icon before section title */
         margin-right: 0.75rem;
-        color: var(--exchange-color);
+        color: var(--exchange-color); /* Theme color for icons */
     }
     .content-section .section-subtitle {
         text-align: center;
         font-size: 1.1rem;
         color: var(--text-secondary);
-        margin-top: -2rem;
+        margin-top: -2rem; /* Pull subtitle closer to H2 */
         margin-bottom: 2.5rem;
         max-width: 700px;
         margin-left: auto;
@@ -275,21 +280,21 @@
 
     .benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
     .benefit-card {
-      background: var(--exchange-card-bg, var(--card-bg));
+      background: var(--exchange-card-bg, var(--card-bg)); /* Use specific or fallback */
       border-radius: 16px;
       padding: 2.2rem;
-      border-left: 5px solid var(--exchange-color);
+      border-left: 5px solid var(--exchange-color); /* Themed accent border */
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
-    .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(240, 185, 11, 0.15); }
+    .benefit-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(240, 185, 11, 0.15); } /* Themed hover shadow */
     .benefit-card i { font-size: 2rem; color: var(--exchange-color); margin-bottom: 1rem; display: block; }
     .benefit-card h4 { font-size: 1.3rem; color: var(--text-primary); margin-bottom: 0.7rem; }
     .benefit-card p { font-size: 0.95rem; color: var(--text-tertiary); line-height: 1.6; }
 
     .how-it-works-steps { list-style: none; counter-reset: step-counter; padding-left: 0; max-width: 800px; margin: 0 auto 3rem auto; }
     .how-it-works-step {
-      background: rgba(20, 20, 20, 0.7);
+      background: rgba(20, 20, 20, 0.7); /* Darker, distinct background for steps */
       border-radius: 12px;
       padding: 1.8rem 2rem;
       margin-bottom: 1.5rem;
@@ -309,11 +314,11 @@
       padding: 1.5rem;
       text-align: center;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border: 1px solid rgba(240, 185, 11, 0.2);
+      border: 1px solid rgba(240, 185, 11, 0.2); /* Subtle themed border */
     }
     .payment-method-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 6px 15px rgba(240, 185, 11, 0.2);
+      box-shadow: 0 6px 15px rgba(240, 185, 11, 0.2); /* Themed shadow */
     }
     .payment-method-card i { font-size: 2.5rem; color: var(--exchange-color); margin-bottom: 0.8rem; display: block; }
     .payment-method-card span { font-size: 1rem; color: var(--text-primary); font-weight: 500; }
@@ -333,14 +338,14 @@
 
     .security-features-list { list-style: none; padding-left: 0; max-width: 700px; margin: 0 auto; }
     .security-feature-item {
-        background: rgba(20,20,20,0.5);
+        background: rgba(20,20,20,0.5); /* Consistent with how-it-works steps */
         padding: 1.25rem 1.75rem;
         margin-bottom: 1rem;
         border-radius: 8px;
         display: flex;
-        align-items: center;
+        align-items: center; /* Vertically align icon and text */
         gap: 1rem;
-        border-left: 3px solid var(--exchange-color);
+        border-left: 3px solid var(--exchange-color); /* Themed accent */
     }
     .security-feature-item i { color: var(--exchange-color); font-size: 1.5rem; }
     .security-feature-item span { font-size: 1rem; color: var(--text-secondary); line-height: 1.5; }
@@ -361,38 +366,41 @@
       position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px;
       background: linear-gradient(45deg, var(--exchange-gradient-start), var(--exchange-color));
       color: var(--exchange-text-on-accent); border: none; border-radius: 50%;
-      font-size: 1.5rem; display: none; align-items: center; justify-content: center;
+      font-size: 1.5rem; display: none; /* Initially hidden */
+      align-items: center; justify-content: center;
       cursor: pointer; z-index: 999; box-shadow: 0 5px 15px rgba(240, 185, 11, 0.4);
       transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
     }
     #back-to-top:hover { transform: translateY(-5px) scale(1.1); box-shadow: 0 8px 20px rgba(240, 185, 11, 0.5); }
-    #back-to-top.visible { display: flex; }
+    #back-to-top.visible { display: flex; } /* JS will toggle this */
 
     @media (max-width: 768px) {
       .main-nav { padding: 0 1.5rem; }
       .nav-burger { display: flex; }
       .nav-links {
         position: fixed; right: 0px; height: calc(100vh - var(--nav-height));
-        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.98);
+        top: var(--nav-height); background-color: rgba(10, 10, 10, 0.98); /* Darker mobile menu */
         backdrop-filter: blur(10px); display: flex; flex-direction: column;
-        align-items: stretch; width: 70%; transform: translateX(100%);
+        align-items: stretch; width: 70%; /* Slightly wider */
+        transform: translateX(100%);
         transition: transform 0.5s ease-in-out; padding-top: 1rem; overflow-y: auto;
       }
       .nav-links li { opacity: 0; margin-left: 0; margin-bottom: 0; width: 100%; display: flex; flex-direction: column; align-items: stretch; height: auto; }
       .nav-links li > a { padding: 1rem 1.5rem; width: 100%; justify-content: space-between; }
-      .nav-links li > a:hover { transform: none; }
+      .nav-links li > a:hover { transform: none; } /* Disable Y transform on mobile hover */
       .dropdown-menu {
         opacity: 0; visibility: hidden; max-height: 0; overflow: hidden;
         position: static; transform: none; width: 100%; box-shadow: none;
-        border-radius: 0; margin-top: 0; padding: 0;
-        background-color: rgba(10, 10, 10, 0.3);
+        border-radius: 0; margin-top: 0; padding: 0; /* Remove base padding */
+        background-color: rgba(10, 10, 10, 0.3); /* Lighter than main mobile nav for distinction */
         transition: opacity 0.3s ease, max-height 0.3s ease, visibility 0s linear 0.3s;
       }
       .nav-links li.dropdown-open > .dropdown-menu {
-        opacity: 1; visibility: visible; max-height: 400px; padding-left: 1.5rem;
-        transition-delay: 0s, 0s, 0s, 0s;
+        opacity: 1; visibility: visible; max-height: 400px; /* Adjust if needed */
+        padding-left: 1.5rem; /* Indent items within the dropdown */
+        transition-delay: 0s; /* Ensure immediate transition */
       }
-      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; }
+      .dropdown-menu a { padding: 0.8rem 1.5rem; font-size: 0.9rem; } /* Padding for items */
 
       .nav-active { transform: translateX(0%); }
       @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0px); } }
@@ -410,7 +418,7 @@
       .payment-method-card span {font-size: 0.9rem;}
     }
     @media (max-width: 480px) {
-      .nav-links { width: 80%; }
+      .nav-links { width: 80%; } /* Wider on very small screens */
       .hero-section .tool-name {font-size: 2.5rem;}
       .hero-section .tool-name .coming-soon-badge { font-size: 1rem; max-width: 200px;}
       .hero-section .tool-tagline {font-size: 1rem;}
@@ -422,17 +430,14 @@
 
   </style>
 </head>
-<body class="exchange-server-page">
-  <a href="#exchange-main-content" class="skip-link">Skip to main content</a>
+<body class="exchange-server-page"> <a href="#exchange-main-content" class="skip-link">Skip to main content</a>
 
   <nav class="main-nav">
     <div class="nav-logo">
       <a href="/index.html"><img src="/media/logo.png" alt="Go6 Logo" id="navbar-logo"></a>
     </div>
     <ul class="nav-links" id="nav-links-main">
-      <li><a href="/index.html" id="nav-home">Home</a></li>
-      <li><a href="/about.html" id="nav-about">About Us</a></li>
-      <li class="nav-item-dropdown">
+      <li><a href="/index.html" id="nav-home">Home</a></li> <li><a href="/about.html" id="nav-about">About Us</a></li> <li class="nav-item-dropdown">
         <a href="#" id="nav-projects" class="nav-projects-link" aria-haspopup="true" aria-expanded="false">
           Projects <i class="fas fa-caret-down"></i>
         </a>
@@ -440,10 +445,9 @@
           <li><a href="/g06.html">G06 Raider</a></li>
           <li><a href="/api-wrapper.html">Discord API Wrapper</a></li>
           <li><a href="/exchange-server.html">Go6 Exchange Server</a></li>
-        </ul>
+          </ul>
       </li>
-      <li><a href="/store.html" id="nav-store">Store</a></li>
-      <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
+      <li><a href="/store.html" id="nav-store">Store</a></li> <li><a href="https://discord.gg/g06" target="_blank" rel="noopener noreferrer">Discord</a></li>
     </ul>
     <button class="nav-burger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links-main">
         <div class="line1"></div> <div class="line2"></div> <div class="line3"></div>
@@ -611,8 +615,8 @@
         <p class="section-subtitle">GO6 Exchange is on its way to becoming your go-to platform for fast and secure digital asset exchanges. We're putting the finishing touches on a service designed with you in mind.</p>
         <p style="text-align: center; font-size: 1.1rem; color: var(--text-primary); margin-bottom: 2rem;">Don't miss out on launch announcements, exclusive early information, and community discussions!</p>
         <div style="text-align: center;">
-            <a href="https://discord.gg/go6" class="cta-button" target="_blank" rel="noopener noreferrer" style="background: var(--exchange-color); color: var(--exchange-text-on-accent);">
-            </a>
+            <a href="https://discord.gg/g06" class="cta-button" target="_blank" rel="noopener noreferrer" style="background: var(--exchange-color); color: var(--exchange-text-on-accent);">
+               <i class="fab fa-discord"></i> Connect on Discord </a>
         </div>
       </section>
 
@@ -628,254 +632,324 @@
   </div>
   <button id="back-to-top" title="Go to top"><i class="fas fa-arrow-up"></i></button>
 
-  <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    let lenis; // Declare lenis in a scope accessible by all functions that need it
+<script>
+document.addEventListener('DOMContentLoaded', function() {
 
-    // Initialize Lenis
-    if (window.Lenis) {
-        lenis = new Lenis({
-            duration: 1.3,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            // Add other Lenis options here if you used them on your home page
-        });
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
+  function easeInOutQuad(t, b, c, d) {
+    t /= d/2;
+    if (t < 1) return c/2*t*t + b;
+    t--;
+    return -c/2 * (t*(t-2) - 1) + b;
+  }
+
+  let scrollAnimationId = null;
+  let targetScrollPosition = 0;
+  let accumulatedScrollDelta = 0;
+  let lastScrollTime = 0;
+  const minScrollDuration = 300;
+  const maxScrollDuration = 1000;
+  const scrollSensitivity = 1.5;
+
+  function smoothScrollTo(targetPosition) {
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const scrollDistance = Math.abs(distance);
+    
+    const now = performance.now();
+    const timeSinceLastScroll = now - lastScrollTime;
+    lastScrollTime = now;
+    
+    let duration = Math.min(
+      maxScrollDuration,
+      Math.max(
+        minScrollDuration,
+        scrollDistance * 0.5 
+      )
+    );
+ 
+    if (timeSinceLastScroll < 100) {
+      duration *= 0.7;
     }
 
-    const mainContentWrapper = document.getElementById('main-content-wrapper');
-    const mainNav = document.querySelector('.main-nav');
-    const body = document.body;
-
-    // Make content visible (ensure this happens after Lenis might have initialized)
-    if(mainNav) mainNav.classList.add('visible');
-    if(mainContentWrapper) mainContentWrapper.classList.add('visible');
-    body.classList.add('content-visible');
-
-
-    function getMediaPath(fileName) { return '/media/' + fileName; }
-
-    const navLogoImg = document.getElementById('navbar-logo');
-    if (navLogoImg) {
-        if (body.classList.contains('exchange-server-page')) {
-            navLogoImg.src = getMediaPath('yellowlogo.png');
-        } else if (body.classList.contains('api-wrapper-page')) {
-            navLogoImg.src = getMediaPath('greengo6.png');
-        } else {
-            navLogoImg.src = getMediaPath('logo.png');
-        }
+    if (scrollAnimationId) {
+      cancelAnimationFrame(scrollAnimationId);
     }
 
-    initializePageScripts();
-    initScrollReveal();
-
-    function initializePageScripts() {
-      const burger = document.querySelector('.nav-burger');
-      const navMenu = document.querySelector('.nav-links');
-      const navMenuId = navMenu ? (navMenu.id || 'nav-links-main') : 'nav-links-main';
-      if (navMenu && !navMenu.id) navMenu.id = navMenuId;
-      if(burger && navMenu) burger.setAttribute('aria-controls', navMenuId);
-
-
-      const navLinkItems = document.querySelectorAll('.nav-links > li');
-
-      if (burger && navMenu) {
-        burger.addEventListener('click', () => {
-          const isExpanded = navMenu.classList.toggle('nav-active');
-          burger.setAttribute('aria-expanded', isExpanded.toString());
-          burger.classList.toggle('toggle');
-          if (navMenu.classList.contains('nav-active')) {
-            navMenu.style.overflowY = 'auto';
-          } else {
-            navMenu.style.overflowY = 'hidden';
-          }
-
-          navLinkItems.forEach((item, index) => {
-            if (item.style.animation) { item.style.animation = ''; }
-            else { item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`; }
-          });
-        });
+    let startTime = null;
+    
+    function animation(currentTime) {
+      if (!startTime) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const easedProgress = easeInOutQuad(progress, 0, 1, 1);
+      const newPosition = startPosition + (distance * easedProgress);
+      
+      window.scrollTo(0, newPosition);
+      
+      if (progress < 1) {
+        scrollAnimationId = requestAnimationFrame(animation);
+      } else {
+        scrollAnimationId = null;
       }
+    }
 
-      if (navMenu) {
-        navMenu.querySelectorAll('a').forEach(link => {
-          if (!link.classList.contains('nav-projects-link')) {
-            link.addEventListener('click', (e) => {
-              const href = link.getAttribute('href');
-              if (href && href.startsWith('#') && lenis) {
-                e.preventDefault();
-                const navElement = document.querySelector('.main-nav');
-                const navHeight = navElement ? navElement.offsetHeight : 70;
-                lenis.scrollTo(href, {offset: -navHeight});
+    scrollAnimationId = requestAnimationFrame(animation);
+  }
+
+  function handleWheelScroll(e) {
+    e.preventDefault();
+    
+    const delta = e.deltaY || e.detail || -e.wheelDelta;
+    const currentTime = performance.now();
+
+    if (currentTime - lastScrollTime < 100) {
+      accumulatedScrollDelta += delta;
+    } else {
+      accumulatedScrollDelta = delta;
+    }
+    
+    const currentScroll = window.pageYOffset;
+    targetScrollPosition = currentScroll + (accumulatedScrollDelta * scrollSensitivity);
+    
+
+    targetScrollPosition = Math.max(0, Math.min(targetScrollPosition, document.body.scrollHeight - window.innerHeight));
+
+    smoothScrollTo(targetScrollPosition);
+    
+    clearTimeout(window.scrollAccumulationReset);
+    window.scrollAccumulationReset = setTimeout(() => {
+      accumulatedScrollDelta = 0;
+    }, 100);
+  }
+
+  function debounce(func, wait = 20) {
+    let timeout;
+    return function() {
+      const context = this, args = arguments;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+
+  const mainContentWrapper = document.getElementById('main-content-wrapper');
+  const mainNav = document.querySelector('.main-nav');
+  const body = document.body;
+  const root = document.documentElement; 
+
+  root.style.setProperty('--primary-purple-rgb', '222, 90, 240');
+  root.style.setProperty('--exchange-color-rgb', '240, 185, 11');
+
+  if(mainNav) mainNav.classList.add('visible');
+  if(mainContentWrapper) mainContentWrapper.classList.add('visible');
+  body.classList.add('content-visible');
+
+  function getMediaPath(fileName) { return '/media/' + fileName; }
+
+  const navLogoImg = document.getElementById('navbar-logo');
+  if (navLogoImg) {
+    if (body.classList.contains('exchange-server-page')) {
+      navLogoImg.src = getMediaPath('yellowlogo.png');
+    } else {
+      navLogoImg.src = getMediaPath('logo.png');
+    }
+  }
+
+  const supportsPassive = false;
+  try {
+    window.addEventListener("test", null, Object.defineProperty({}, 'passive', {
+      get: function() { supportsPassive = true; } 
+    }));
+  } catch(e) {}
+
+  const wheelOptions = supportsPassive ? { passive: false } : false;
+  window.addEventListener('wheel', handleWheelScroll, wheelOptions);
+  window.addEventListener('mousewheel', handleWheelScroll, wheelOptions);
+  window.addEventListener('DOMMouseScroll', handleWheelScroll, wheelOptions);
+
+  initializePageScripts();
+  initScrollReveal();
+
+  function initializePageScripts() {
+    const burger = document.querySelector('.nav-burger');
+    const navMenu = document.querySelector('.nav-links');
+    const navMenuId = navMenu ? (navMenu.id || 'nav-links-main') : 'nav-links-main';
+    if (navMenu && !navMenu.id) navMenu.id = navMenuId;
+    if(burger && navMenu) burger.setAttribute('aria-controls', navMenuId);
+
+    const navLinkItems = document.querySelectorAll('.nav-links > li');
+
+    if (burger && navMenu) {
+      burger.addEventListener('click', () => {
+        const isExpanded = navMenu.classList.toggle('nav-active');
+        burger.setAttribute('aria-expanded', isExpanded.toString());
+        burger.classList.toggle('toggle');
+        body.style.overflow = navMenu.classList.contains('nav-active') ? 'hidden' : '';
+
+        navLinkItems.forEach((item, index) => {
+          if (navMenu.classList.contains('nav-active')) {
+            item.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+          } else {
+            item.style.animation = '';
+          }
+        });
+      });
+    }
+
+    if (navMenu) {
+      navMenu.querySelectorAll('a').forEach(link => {
+        if (!link.classList.contains('nav-projects-link')) {
+          link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+              e.preventDefault();
+              const targetElement = document.querySelector(href);
+              if (targetElement) {
+                const navHeight = mainNav ? mainNav.offsetHeight : 70;
+                smoothScrollTo(targetElement.offsetTop - navHeight);
               }
-              if (navMenu.classList.contains('nav-active') && !link.closest('.dropdown-menu')) {
+            }
+            
+            if (navMenu.classList.contains('nav-active') && !link.closest('.nav-item-dropdown .dropdown-menu')) {
+              if (!link.closest('.nav-item-dropdown') || link.closest('.dropdown-menu')) {
                 navMenu.classList.remove('nav-active');
-                navMenu.style.overflowY = 'hidden';
+                body.style.overflow = '';
                 if (burger) {
-                    burger.classList.remove('toggle');
-                    burger.setAttribute('aria-expanded', 'false');
+                  burger.classList.remove('toggle');
+                  burger.setAttribute('aria-expanded', 'false');
                 }
                 navLinkItems.forEach(item => item.style.animation = '');
               }
-            });
-          }
-        });
-      }
-
-      const projectsLink = document.querySelector('.nav-projects-link');
-      if (projectsLink) {
-        projectsLink.addEventListener('click', function(e) {
-          if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
-            e.preventDefault();
-            const parentLi = this.parentElement;
-            const isDropdownOpen = parentLi.classList.toggle('dropdown-open');
-            this.setAttribute('aria-expanded', isDropdownOpen.toString());
-             const dropdownMenu = parentLi.querySelector('.dropdown-menu');
-            if (dropdownMenu) {
-                if (parentLi.classList.contains('dropdown-open')) {
-                    dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + "px";
-                } else {
-                    dropdownMenu.style.maxHeight = '0';
-                }
             }
+          });
+        }
+      });
+    }
+
+    const projectsLink = document.querySelector('.nav-projects-link');
+    if (projectsLink) {
+      projectsLink.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768 && navMenu && navMenu.classList.contains('nav-active')) {
+          e.preventDefault();
+          const parentLi = this.parentElement;
+          const isDropdownOpen = parentLi.classList.toggle('dropdown-open');
+          this.setAttribute('aria-expanded', isDropdownOpen.toString());
+          const dropdownMenu = parentLi.querySelector('.dropdown-menu');
+          if (dropdownMenu) {
+            dropdownMenu.style.maxHeight = isDropdownOpen ? dropdownMenu.scrollHeight + "px" : null;
           }
-        });
+        }
+      });
+    }
+
+    const currentPagePath = window.location.pathname;
+    const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
+    const normalizePath = (path) => {
+      if (!path) return '';
+      if (!path.startsWith('/') && !path.startsWith('http') && path !== '#') path = '/' + path;
+
+      if (path === '/' || path.endsWith('/index') || path.endsWith('/index.html')) return '/index.html';
+      if (path.endsWith('/') && path.length > 1) path = path.slice(0, -1);
+      if (!path.includes('.') && !path.startsWith('#') && !path.startsWith('http')) path += '.html';
+      return path;
+    };
+
+    let normalizedCurrentPagePath = normalizePath(currentPagePath);
+    const pageChecks = {
+      '/exchange-server.html': ['exchange-server'],
+      '/api-wrapper.html': ['api-wrapper'],
+      '/g06.html': ['g06.html', '/g06'],
+    };
+    for (const [normalized, checks] of Object.entries(pageChecks)) {
+      if (checks.some(check => currentPagePath.includes(check))) {
+        normalizedCurrentPagePath = normalized;
+        break;
       }
+    }
 
-      const currentPagePath = window.location.pathname;
-      const allNavAnchors = document.querySelectorAll('.main-nav .nav-links a');
-      const normalizePath = (path) => {
-        if (!path) return '';
-        if (!path.startsWith('/')) path = '/' + path;
-        if (path === '/' || path === '/index' || path.endsWith('/index.html')) return '/index.html';
-        if (!path.endsWith('/') && !path.includes('.')) path += '.html';
-        return path;
-      };
-
-      let normalizedCurrentPagePath = normalizePath(currentPagePath);
-
-      if (currentPagePath.includes('exchange-server')) {
-        normalizedCurrentPagePath = '/exchange-server.html';
-      } else if (currentPagePath.includes('api-wrapper')) {
-        normalizedCurrentPagePath = '/api-wrapper.html';
-      } else if (currentPagePath.includes('g06.html') || currentPagePath.endsWith('/g06')) {
-          normalizedCurrentPagePath = '/g06.html';
-      } else if (currentPagePath.includes('app-raider')) {
-          normalizedCurrentPagePath = '/app-raider.html';
-      }
-
-
-      allNavAnchors.forEach(anchor => {
-        let linkHref = anchor.getAttribute('href');
-        if (!linkHref || linkHref === '#') return;
-        let normalizedLinkHref = normalizePath(linkHref);
-
-        if (normalizedLinkHref === normalizedCurrentPagePath) {
+    allNavAnchors.forEach(anchor => {
+      anchor.classList.remove('active');
+      let linkHref = anchor.getAttribute('href');
+      if (!linkHref || linkHref.startsWith('http') || linkHref === '#') {
+        if(anchor.id === 'nav-projects' && anchor.parentElement.querySelector('.dropdown-menu a.active')){
           anchor.classList.add('active');
-          const dropdownParent = anchor.closest('.nav-item-dropdown');
-          if (dropdownParent) {
-            const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
-            if (projectsMainLink) projectsMainLink.classList.add('active');
-          }
-        } else {
-          if (!(anchor.id === 'nav-projects' && document.querySelector('.dropdown-menu a.active'))) {
-            anchor.classList.remove('active');
-          }
         }
-      });
-      if (document.querySelector('.dropdown-menu a.active')) {
-        const projectsMainLink = document.getElementById('nav-projects');
-        if (projectsMainLink && !projectsMainLink.classList.contains('active')) {
-             projectsMainLink.classList.add('active');
+        return;
+      }
+      let normalizedLinkHref = normalizePath(linkHref);
+
+      if (normalizedLinkHref === normalizedCurrentPagePath) {
+        anchor.classList.add('active');
+        const dropdownParent = anchor.closest('.nav-item-dropdown');
+        if (dropdownParent) {
+          const projectsMainLink = dropdownParent.querySelector('a.nav-projects-link');
+          if (projectsMainLink) projectsMainLink.classList.add('active');
         }
       }
-
-      const backToTopButton = document.getElementById('back-to-top');
-      if (backToTopButton) {
-        if (lenis) {
-            lenis.on('scroll', (e) => {
-                if (e.scroll > 300) {
-                    backToTopButton.classList.add('visible');
-                } else {
-                    backToTopButton.classList.remove('visible');
-                }
-            });
-        } else {
-            window.addEventListener('scroll', () => {
-                if (window.pageYOffset > 300) {
-                    backToTopButton.classList.add('visible');
-                } else {
-                    backToTopButton.classList.remove('visible');
-                }
-            });
-        }
-
-        backToTopButton.addEventListener('click', () => {
-          if (lenis) {
-            lenis.scrollTo(0, { duration: 1.5 });
-          } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        });
-      }
+    });
+    
+    const projectsMainActiveCheck = document.querySelector('.main-nav #nav-projects');
+    if (projectsMainActiveCheck && projectsMainActiveCheck.parentElement.querySelector('.dropdown-menu a.active')) {
+      projectsMainActiveCheck.classList.add('active');
     }
 
-    function initScrollReveal() {
-      const sectionsToReveal = document.querySelectorAll(
-          '.benefits-section, .how-it-works-section, .payment-methods-section, .what-we-exchange-section, .security-section, .faq-section, .stay-updated-section, .hero-section:not(:first-of-type)'
-      );
-      if (!sectionsToReveal.length) return;
-
-      sectionsToReveal.forEach(section => {
-        section.classList.add('section-hidden');
+    const backToTopButton = document.getElementById('back-to-top');
+    if (backToTopButton) {
+      const scrollHandler = debounce(() => {
+        const scrollPosition = window.pageYOffset;
+        backToTopButton.classList.toggle('visible', scrollPosition > 300);
       });
 
-      const observer = new IntersectionObserver((entries, observerInstance) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.remove('section-hidden');
-            entry.target.classList.add('section-visible');
-            observerInstance.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.05 });
+      window.addEventListener('scroll', scrollHandler);
 
-      sectionsToReveal.forEach(section => {
-        observer.observe(section);
+      backToTopButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        smoothScrollTo(0);
       });
     }
 
-    // Skip Link with Lenis
     const skipLink = document.querySelector('a.skip-link');
     if (skipLink) {
-        skipLink.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId && targetId.startsWith('#')) {
-                e.preventDefault();
-                if (lenis) {
-                    const navElement = document.querySelector('.main-nav');
-                    const navHeight = navElement ? navElement.offsetHeight : 70; // Default or calculated
-                    lenis.scrollTo(targetId, { offset: -navHeight });
-                } else {
-                    // Fallback if Lenis is not available
-                    const targetElement = document.querySelector(targetId);
-                    if (targetElement) {
-                         const navElement = document.querySelector('.main-nav');
-                         const navHeight = navElement ? navElement.offsetHeight : 70;
-                        window.scrollTo({
-                            top: targetElement.offsetTop - navHeight,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }
-        });
+      skipLink.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId && targetId.startsWith('#')) {
+          e.preventDefault();
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            const navHeight = mainNav ? mainNav.offsetHeight : 70;
+            smoothScrollTo(targetElement.offsetTop - navHeight);
+            targetElement.focus({ preventScroll: true });
+          }
+        }
+      });
     }
-  });
-  </script>
+  }
+
+  function initScrollReveal() {
+    const sectionsToReveal = document.querySelectorAll(
+      '.benefits-section, .how-it-works-section, .payment-methods-section, .what-we-exchange-section, .security-section, .faq-section, .stay-updated-section, .hero-section:not(:first-of-type)'
+    );
+    if (!sectionsToReveal.length) return;
+
+    sectionsToReveal.forEach(section => {
+      section.classList.add('section-hidden');
+    });
+
+    const observer = new IntersectionObserver((entries, observerInstance) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove('section-hidden');
+          entry.target.classList.add('section-visible');
+          observerInstance.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sectionsToReveal.forEach(section => {
+      observer.observe(section);
+    });
+  }
+});
+</script>
 </body>
+</html>
 </html>
